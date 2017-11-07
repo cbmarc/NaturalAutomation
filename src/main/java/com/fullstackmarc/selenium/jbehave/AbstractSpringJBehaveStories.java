@@ -29,6 +29,7 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
     @Autowired
     private ApplicationContext applicationContext;
 
+
     CrossReference crossReference = new CrossReference()
             .withJsonOnly();
 
@@ -37,8 +38,7 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
 
 
     public AbstractSpringJBehaveStories() {
-        configuredEmbedder().embedderControls().doGenerateViewAfterStories(true).doIgnoreFailureInStories(false)
-                .doIgnoreFailureInView(true).doVerboseFailures(true).useThreads(2);
+        useEmbedder(new SpringInjectableEmbedder().injectedEmbedder());
     }
 
     @Override
@@ -65,8 +65,6 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
 
     @Override
     public InjectableStepsFactory stepsFactory() {
-//        applicationContext = new SpringApplicationContextFactory(AcceptanceTestsConfiguration.class.getName()).createApplicationContext();
-
         return new SpringStepsFactory(configuration(), applicationContext);
     }
 
