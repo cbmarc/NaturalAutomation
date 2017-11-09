@@ -1,7 +1,7 @@
-package com.fullstackmarc.selenium;
+package com.fullstackmarc.fwkpoc.selenium;
 
-import com.fullstackmarc.selenium.jbehave.AbstractSpringJBehaveStories;
-import com.fullstackmarc.selenium.jbehave.AcceptanceTest;
+import com.fullstackmarc.fwkpoc.jbehave.AbstractSpringJBehaveStories;
+import com.fullstackmarc.fwkpoc.jbehave.AcceptanceTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

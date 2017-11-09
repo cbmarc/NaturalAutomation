@@ -1,4 +1,4 @@
-package com.fullstackmarc.selenium.jbehave;
+package com.fullstackmarc.fwkpoc.jbehave;
 
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
@@ -7,9 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Steps
-public class SharedSteps {
+public class CommonSteps {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SharedSteps.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CommonSteps.class);
 
     @Given("the user is in the $page page")
     public void givenUserInPage(String page) {

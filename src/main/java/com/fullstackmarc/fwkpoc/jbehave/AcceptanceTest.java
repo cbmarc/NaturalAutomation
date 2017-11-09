@@ -1,6 +1,6 @@
-package com.fullstackmarc.selenium.jbehave;
+package com.fullstackmarc.fwkpoc.jbehave;
 
-import com.fullstackmarc.selenium.config.AcceptanceTestsConfiguration;
+import com.fullstackmarc.fwkpoc.config.AcceptanceTestsConfiguration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;

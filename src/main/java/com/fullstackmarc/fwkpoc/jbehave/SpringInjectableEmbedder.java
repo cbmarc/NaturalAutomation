@@ -1,4 +1,4 @@
-package com.fullstackmarc.selenium.jbehave;
+package com.fullstackmarc.fwkpoc.jbehave;
 
 import org.jbehave.core.InjectableEmbedder;
 import org.jbehave.core.annotations.Configure;
