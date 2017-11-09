@@ -1,4 +1,4 @@
-package com.fullstackmarc.selenium.jbehave;
+package com.fullstackmarc.fwkpoc.jbehave;
 
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
