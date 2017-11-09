@@ -3,7 +3,6 @@ package com.fullstackmarc.selenium.jbehave;
 import com.fullstackmarc.selenium.config.AcceptanceTestsConfiguration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.lang.annotation.ElementType;
@@ -13,7 +12,7 @@ import java.lang.annotation.Target;
 
 @ContextConfiguration(classes = AcceptanceTestsConfiguration.class)
 @ImportResource({"classpath:/application.properties", "classpath:/tests.properties"})
-@ActiveProfiles("tests")
+//@ActiveProfiles("tests")
 @DirtiesContext
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
