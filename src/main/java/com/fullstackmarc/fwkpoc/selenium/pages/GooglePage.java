@@ -14,8 +14,8 @@ public class GooglePage extends AbstractPage implements Named  {
     @Value("${google.page.search.button.name}")
     private String searchButtonName;
 
-    public GooglePage(WebDriver webDriver) {
-        super(webDriver);
+    public GooglePage(WebDriver driver) {
+        super(driver);
     }
 
     @Override
@@ -30,6 +30,9 @@ public class GooglePage extends AbstractPage implements Named  {
 
     public GoogleResultsPage clickSearchButton() {
         driver.findElement(By.name(searchButtonName)).click();
+        /**
+         * TODO: Redo
+         */
         return new GoogleResultsPage(driver);
     }
 }

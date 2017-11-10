@@ -2,12 +2,11 @@ package com.fullstackmarc.fwkpoc.selenium.pages;
 
 import org.openqa.selenium.WebDriver;
 
-public class AbstractPage {
+public abstract class AbstractPage {
 
-    protected final WebDriver driver;
+    protected WebDriver driver;
 
     public AbstractPage(WebDriver driver) {
         this.driver = driver;
     }
-
 }
