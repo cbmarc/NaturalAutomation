@@ -17,7 +17,6 @@ public class GoogleResultsPage extends AbstractPage implements Named {
     @Value("${google.results.page.result.class}")
     private String resultClass;
 
-
     public GoogleResultsPage(WebDriver driver) {
         super(driver);
     }
