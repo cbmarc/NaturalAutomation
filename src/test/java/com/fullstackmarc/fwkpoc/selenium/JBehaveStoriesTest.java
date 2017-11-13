@@ -2,7 +2,6 @@ package com.fullstackmarc.fwkpoc.selenium;
 
 import com.fullstackmarc.fwkpoc.jbehave.AbstractSpringJBehaveStories;
 import com.fullstackmarc.fwkpoc.jbehave.AcceptanceTest;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -10,8 +9,4 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @AcceptanceTest
 public class JBehaveStoriesTest extends AbstractSpringJBehaveStories {
 
-    @Test
-    public void testIt() throws Exception {
-        System.out.println("BLAH");
-    }
 }
