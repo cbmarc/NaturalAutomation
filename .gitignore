@@ -4,6 +4,7 @@
 .project
 .classpath
 target/
+drivers/
 # Compiled class file
 *.class
 

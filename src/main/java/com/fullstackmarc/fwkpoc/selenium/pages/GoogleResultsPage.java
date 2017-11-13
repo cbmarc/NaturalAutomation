@@ -1,12 +1,12 @@
 package com.fullstackmarc.fwkpoc.selenium.pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
+@PageObject
 public class GoogleResultsPage extends AbstractPage implements Named {
 
     public static final String PAGE_NAME = "Google results page";
@@ -16,10 +16,6 @@ public class GoogleResultsPage extends AbstractPage implements Named {
 
     @Value("${google.results.page.result.class}")
     private String resultClass;
-
-    public GoogleResultsPage(WebDriver driver) {
-        super(driver);
-    }
 
     @Override
     public String getName() {
