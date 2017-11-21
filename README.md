@@ -8,4 +8,4 @@ This is a WorkInProgress project. I do it in my free time and there is no finish
 
 ## Goal ##
 
-The goal is to have a skeleton framework to use wherever needed, easily extendable and well documented. Oviously that goal is still a tad to far :)
+The goal is to have a skeleton framework to use wherever needed, easily extendable and well documented. Obviously that goal is still a tad to far :)
