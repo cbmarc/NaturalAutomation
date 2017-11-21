@@ -3,6 +3,7 @@ package com.fullstackmarc.fwkpoc.selenium.pages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -16,7 +17,8 @@ public class PageFactory {
     }
 
     public Page getPage(String name) {
-        Named namedPage = pages.stream().filter(p -> p.getName().equals(name)).findFirst().get();
+        Optional<? extends Named> optNamedPage = pages.stream().filter(p -> p.getName().equals(name)).findFirst();
+        Named namedPage = optNamedPage.orElse(null);
         return (Page) namedPage;
     }
 }
