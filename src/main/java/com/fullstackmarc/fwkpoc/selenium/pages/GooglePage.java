@@ -5,12 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 @PageObject
-public class GooglePage extends AbstractPage implements Named  {
+public class GooglePage extends Page implements Named {
 
-    public static final String PAGE_NAME = "Google page";
+    private static final String PAGE_NAME = "Google";
 
-    @Autowired
-    private GoogleResultsPage googleResultsPage;
+    private final GoogleResultsPage googleResultsPage;
 
     @Value("${google.page.search.input.id}")
     private String searchBoxId;
@@ -18,18 +17,23 @@ public class GooglePage extends AbstractPage implements Named  {
     @Value("${google.page.search.button.name}")
     private String searchButtonName;
 
+    @Autowired
+    public GooglePage(GoogleResultsPage googleResultsPage) {
+        this.googleResultsPage = googleResultsPage;
+    }
+
     @Override
     public String getName() {
         return PAGE_NAME;
     }
 
     public GooglePage typeSearch(String text) {
-        driver.findElement(By.id(searchBoxId)).sendKeys(text);
+        getDriver().findElement(By.id(searchBoxId)).sendKeys(text);
         return this;
     }
 
     public GoogleResultsPage clickSearchButton() {
-        driver.findElement(By.name(searchButtonName)).click();
+        getDriver().findElement(By.name(searchButtonName)).click();
         return googleResultsPage;
     }
 }
