@@ -1,20 +1,23 @@
-package com.fullstackmarc.fwkpoc.config;
+package com.fullstackmarc.fwkpoc;
 
 import com.fullstackmarc.fwkpoc.selenium.TestScope;
-import com.github.webdriverextensions.WebDriverExtensionsContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.beans.factory.config.Scope;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Configuration
-@ComponentScan(basePackages = {"com.fullstackmarc.selenium"})
-public class AcceptanceTestsConfiguration {
+@SpringBootApplication
+public class Application {
 
     @Bean
     public PropertyPlaceholderConfigurer getPropertyPlaceholderConfigurer() throws IOException {
@@ -25,13 +28,17 @@ public class AcceptanceTestsConfiguration {
 
     @Bean
     public WebDriver driver() throws IOException {
-        WebDriverExtensionsContext.setDriver(new ChromeDriver());
-        return WebDriverExtensionsContext.getDriver();
+        Path basePath = Paths.get("target/").toAbsolutePath();
+        System.setProperty("webdriver.chrome.driver", basePath + "/drivers/chromedriver.exe");
+        return new ChromeDriver();
     }
 
     @Bean
-    public TestScope testScope() {
+    public Scope testScope() {
         return new TestScope();
     }
 
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 }
