@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import java.util.List;
 
 @PageObject
-public class GoogleResultsPage extends AbstractPage implements Named {
+public class GoogleResultsPage extends Page implements Named {
 
-    public static final String PAGE_NAME = "Google results page";
+    public static final String PAGE_NAME = "Google results";
 
     @Value("${google.results.page.list.id}")
     private String resultsListId;
@@ -23,7 +23,7 @@ public class GoogleResultsPage extends AbstractPage implements Named {
     }
 
     public int getResultCount() {
-        List<WebElement> results = driver.findElement(By.id(resultsListId)).findElements(By.className(resultClass));
+        List<WebElement> results = getDriver().findElement(By.id(resultsListId)).findElements(By.className(resultClass));
         return results.size();
     }
 

@@ -18,7 +18,7 @@ public class CommonSteps {
 
     @Given("the user is in the $page page")
     public void givenUserInPage(String page) {
-        LOG.info("Given the page is populated with random data.");
+        LOG.info("Given the user is in the {} page.", page);
     }
 
     @When("nothing happens")
