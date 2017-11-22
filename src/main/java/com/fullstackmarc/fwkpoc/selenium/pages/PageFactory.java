@@ -12,7 +12,7 @@ public class PageFactory {
     private final Set<? extends Named> pages;
 
     @Autowired
-    public <T extends Page & Named> PageFactory(Set<? extends T> pages) {
+    public <T extends Page & Named> PageFactory(Set<T> pages) {
         this.pages = pages;
     }
 
@@ -20,5 +20,9 @@ public class PageFactory {
         Optional<? extends Named> optNamedPage = pages.stream().filter(p -> p.getName().equals(name)).findFirst();
         Named namedPage = optNamedPage.orElse(null);
         return (Page) namedPage;
+    }
+
+    public Set<? extends Named> getPages() {
+        return pages;
     }
 }
