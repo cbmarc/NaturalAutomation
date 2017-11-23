@@ -29,11 +29,10 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
     @Autowired
     private ApplicationContext applicationContext;
 
-
-    CrossReference crossReference = new CrossReference()
+    private CrossReference crossReference = new CrossReference()
             .withJsonOnly();
 
-    StepMonitor stepMonitor = new SilentStepMonitor();
+    private StepMonitor stepMonitor = new SilentStepMonitor();
 
 
 
@@ -46,6 +45,7 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
         // Start from default ParameterConverters instance
         ParameterConverters parameterConverters = new ParameterConverters();
         StoryReporterBuilder reporterBuilder = new StoryReporterBuilder()
+                .withReporters(new LoggingStoryReporter())
                 .withCodeLocation(CodeLocations.codeLocationFromClass(this.getClass()))
                 .withDefaultFormats()
                 .withFailureTrace(true)
