@@ -1,5 +1,6 @@
 package com.fullstackmarc.fwkpoc.selenium.pages;
 
+import com.fullstackmarc.fwkpoc.exceptions.PageNotMappedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +17,13 @@ public class PageFactory {
         this.pages = pages;
     }
 
-    public Page getPage(String name) {
+    public Page getPage(String name) throws PageNotMappedException {
         Optional<? extends Named> optNamedPage = pages.stream().filter(p -> p.getName().equals(name)).findFirst();
         Named namedPage = optNamedPage.orElse(null);
+        if (namedPage == null) {
+            throw new PageNotMappedException(String.format("Page %s is not mapped. Check if a page extending the " +
+                    "'Page' class and implementing the 'Named' interface exists.", name));
+        }
         return (Page) namedPage;
     }
 

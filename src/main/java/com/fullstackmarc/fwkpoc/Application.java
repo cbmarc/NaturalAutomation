@@ -4,7 +4,6 @@ import com.fullstackmarc.fwkpoc.selenium.TestScope;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.beans.factory.config.Scope;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -35,7 +34,7 @@ public class Application {
     }
 
     @Bean
-    public Scope testScope() {
+    public TestScope testScope() {
         return new TestScope();
     }
 
