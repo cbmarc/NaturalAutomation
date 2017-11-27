@@ -1,20 +1,21 @@
 package com.fullstackmarc.fwkpoc.selenium.pages;
 
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import static io.github.benas.randombeans.api.EnhancedRandom.random;
 
@@ -33,7 +34,7 @@ public abstract class Page {
     }
 
     /**
-     * Function to get the current URL.
+     * Function to get the current PAGE_URL.
      * A page can override this function to get its url instead.
      */
     protected String getURL() {
@@ -44,18 +45,41 @@ public abstract class Page {
         List<Field> fields = Arrays.asList(this.getClass().getDeclaredFields());
         fields.stream()
                 .filter(f -> f.isAnnotationPresent(InputData.class))
-                .forEach(this::acceptFieldValue);
+                .forEach(f -> this.setFieldValue(f, random(String.class), this::inputText));
 
     }
 
-    public Object getFieldValue(String field) {
+    public Object getFieldValue(String fieldName) throws NoSuchFieldException, IllegalAccessException {
         try {
-            PropertyDescriptor descriptor = new PropertyDescriptor(field, this.getClass());
-            return descriptor.getReadMethod().invoke(this);
-        } catch (IntrospectionException | IllegalAccessException | InvocationTargetException e) {
-            LOG.error("Error when trying to get field value for field: " + field + ".", e);
+            Field field = this.getClass().getDeclaredField(fieldName);
+            boolean accesible = field.isAccessible();
+            field.setAccessible(true);
+            Object obj = field.get(this);
+            // Restore previous state
+            field.setAccessible(accesible);
+            return obj;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            LOG.error("Error when trying to get field value for field: " + fieldName + ".", e);
+            throw e;
         }
-        return null;
+    }
+
+    public void writeTextInField(String fieldName, String value) throws NoSuchFieldException {
+        this.setFieldValue(fieldName, value, this::inputText);
+    }
+
+    public void selectOptionInField(String fieldName, String value) throws NoSuchFieldException {
+        this.setFieldValue(fieldName, value, this::chooseOptionFromSelect);
+    }
+
+    private void setFieldValue(String fieldName, String value, BiConsumer<WebElement, String> consumer) throws NoSuchFieldException {
+        try {
+            Field field = this.getClass().getDeclaredField(fieldName);
+            setFieldValue(field, value, consumer);
+        } catch (NoSuchFieldException e) {
+            LOG.error("Error when trying to set field value for field: " + fieldName + ".", e);
+            throw e;
+        }
     }
 
     public Page invokeAction(String action, Object ... params) {
@@ -83,6 +107,19 @@ public abstract class Page {
                 .click(element)
                 .sendKeys(element, text)
                 .build().perform();
+        LOG.info("Sending text to element: {}", text);
+    }
+
+    protected void chooseOptionFromSelect(WebElement element, String text) {
+        Select select = new Select(element);
+        select.selectByVisibleText(text);
+    }
+
+    protected void pressEnter(WebElement element) {
+        Actions actions = new Actions(driver);
+        actions.moveToElement(element)
+                .sendKeys(element, Keys.ENTER)
+                .build().perform();
     }
 
     protected void click(WebElement element) {
@@ -97,14 +134,16 @@ public abstract class Page {
         return this;
     }
 
-    private void acceptFieldValue(Field f) {
+    private void setFieldValue(Field f, String value, BiConsumer<WebElement, String> consumer) {
         try {
             f.setAccessible(true);
             WebElement element = (WebElement) f.get(this);
-            inputText(element, random(String.class));
+            click(element);
+            consumer.accept(element, value);
             f.setAccessible(false);
         } catch (IllegalAccessException e) {
             LOG.warn("Error setting default random data.", e);
         }
     }
+
 }
