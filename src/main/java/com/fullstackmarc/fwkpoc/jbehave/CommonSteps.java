@@ -2,6 +2,7 @@ package com.fullstackmarc.fwkpoc.jbehave;
 
 import com.fullstackmarc.fwkpoc.exceptions.PageNotMappedException;
 import com.fullstackmarc.fwkpoc.selenium.TestScope;
+import com.fullstackmarc.fwkpoc.selenium.pages.Page;
 import com.fullstackmarc.fwkpoc.selenium.pages.PageFactory;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
@@ -32,17 +33,20 @@ public class CommonSteps {
     }
 
     @Given("the page is populated with random data")
-    public void givenPagePopulatedRandom(String page) {
-        LOG.info("Given the user is in the " + page + " page.");
+    public void givenPagePopulatedRandom() {
+        LOG.info("Given the page is populated with random data.");
+        ((Page) testScope.get(CURRENT_PAGE)).fillDefaultData();
     }
 
-    @When("nothing happens")
-    public void whenNothingHappens() {
-
+    @When("the user does a $action")
+    public void whenUserDoesAnAction(String action) {
+        LOG.info("When the user does a {}.", action);
+        Page page = ((Page) testScope.get(CURRENT_PAGE)).invokeAction(action);
+        testScope.put(CURRENT_PAGE, page);
     }
 
-    @Then("nothing will happen")
-    public void thenNothingWillHappen() {
+    @Then("there should be $results")
+    public void thenThereShouldBeResults(String collectionName) {
 
     }
 }
