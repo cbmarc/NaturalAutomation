@@ -28,7 +28,7 @@ public class CommonSteps {
     @Given("the user is in the $page page")
     public void givenUserInPage(String page) throws PageNotMappedException {
         LOG.info("Given the user is in the {} page.", page);
-        testScope.put(CURRENT_PAGE, pageFactory.getPage(page));
+        testScope.put(CURRENT_PAGE, pageFactory.getPage(page).navigate());
     }
 
     @Given("the page is populated with random data")

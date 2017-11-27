@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 public class GooglePage extends Page implements Named {
 
     private static final String PAGE_NAME = "Google";
+    private static final String GOOGLE_ES = "http://www.google.es";
+    private static final String PAGE_URL = GOOGLE_ES;
 
     private final GoogleResultsPage googleResultsPage;
 
@@ -35,5 +37,10 @@ public class GooglePage extends Page implements Named {
     public GoogleResultsPage clickSearchButton() {
         getDriver().findElement(By.name(searchButtonName)).click();
         return googleResultsPage;
+    }
+
+    @Override
+    String getURL() {
+        return PAGE_URL;
     }
 }
