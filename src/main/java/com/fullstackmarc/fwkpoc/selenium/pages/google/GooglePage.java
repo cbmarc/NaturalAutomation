@@ -1,5 +1,9 @@
-package com.fullstackmarc.fwkpoc.selenium.pages;
+package com.fullstackmarc.fwkpoc.selenium.pages.google;
 
+import com.fullstackmarc.fwkpoc.selenium.pages.InputData;
+import com.fullstackmarc.fwkpoc.selenium.pages.Named;
+import com.fullstackmarc.fwkpoc.selenium.pages.Page;
+import com.fullstackmarc.fwkpoc.selenium.pages.PageObject;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +45,12 @@ public class GooglePage extends Page implements Named {
     }
 
     @Override
-    String getURL() {
+    protected String getURL() {
         return PAGE_URL;
     }
 
     @Override
-    boolean isInPage() {
+    protected boolean isInPage() {
         return false;
     }
 

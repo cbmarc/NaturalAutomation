@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,7 +36,7 @@ public abstract class Page {
      * Function to get the current URL.
      * A page can override this function to get its url instead.
      */
-    String getURL() {
+    protected String getURL() {
         return driver.getCurrentUrl();
     }
 
@@ -44,6 +46,16 @@ public abstract class Page {
                 .filter(f -> f.isAnnotationPresent(InputData.class))
                 .forEach(this::acceptFieldValue);
 
+    }
+
+    public Object getFieldValue(String field) {
+        try {
+            PropertyDescriptor descriptor = new PropertyDescriptor(field, this.getClass());
+            return descriptor.getReadMethod().invoke(this);
+        } catch (IntrospectionException | IllegalAccessException | InvocationTargetException e) {
+            LOG.error("Error when trying to get field value for field: " + field + ".", e);
+        }
+        return null;
     }
 
     public Page invokeAction(String action, Object ... params) {
@@ -64,7 +76,7 @@ public abstract class Page {
         return null;
     }
 
-    void inputText(WebElement element, String text) {
+    protected void inputText(WebElement element, String text) {
         Actions actions = new Actions(driver);
         actions
                 .moveToElement(element)
@@ -73,12 +85,12 @@ public abstract class Page {
                 .build().perform();
     }
 
-    void click(WebElement element) {
+    protected void click(WebElement element) {
         Actions actions = new Actions(driver);
         actions.click(element).build().perform();
     }
 
-    abstract boolean isInPage();
+    protected abstract boolean isInPage();
 
     public Page navigate() {
         driver.get(getURL());
