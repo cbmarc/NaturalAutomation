@@ -3,7 +3,7 @@ In order to test jbehave's capabilities out, I write this story for the google s
 
 Scenario: Search for some random string at the google search page
 
-Given the user is in the Google page
-And the page is populated with random data
-When the user does a search
+Given I am in the Google page
+And I have written 'hello world' in the searchBox
+When I search
 Then there should be results

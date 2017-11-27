@@ -34,7 +34,7 @@ public class LoggingStoryReporter implements StoryReporter {
 
     @Override
     public void beforeStory(Story story, boolean givenStory) {
-
+        LOG.info("Currently running story {}.", story.getName());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class LoggingStoryReporter implements StoryReporter {
 
     @Override
     public void beforeScenario(String scenarioTitle) {
-
+        LOG.info("Currently running scenario {}.", scenarioTitle);
     }
 
     @Override
