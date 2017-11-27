@@ -21,14 +21,6 @@ public class GoogleResultsPage extends Page implements Named {
         return PAGE_NAME;
     }
 
-    public List<WebElement> getResults() {
-        return results;
-    }
-
-    public void setResults(List<WebElement> results) {
-        this.results = results;
-    }
-
     @Override
     protected boolean isInPage() {
         return false;

@@ -24,21 +24,9 @@ public abstract class Page {
     private static final Logger LOG = LoggerFactory.getLogger(Page.class);
     private WebDriver driver;
 
-    WebDriver getDriver() {
-        return driver;
-    }
-
     @Autowired
     public void setDriver(WebDriver driver) {
         this.driver = driver;
-    }
-
-    /**
-     * Function to get the current PAGE_URL.
-     * A page can override this function to get its url instead.
-     */
-    protected String getURL() {
-        return driver.getCurrentUrl();
     }
 
     public void fillDefaultData() {
@@ -72,17 +60,7 @@ public abstract class Page {
         this.setFieldValue(fieldName, value, this::chooseOptionFromSelect);
     }
 
-    private void setFieldValue(String fieldName, String value, BiConsumer<WebElement, String> consumer) throws NoSuchFieldException {
-        try {
-            Field field = this.getClass().getDeclaredField(fieldName);
-            setFieldValue(field, value, consumer);
-        } catch (NoSuchFieldException e) {
-            LOG.error("Error when trying to set field value for field: " + fieldName + ".", e);
-            throw e;
-        }
-    }
-
-    public Page invokeAction(String action, Object ... params) {
+    public Page invokeAction(String action, Object... params) {
         List<Method> methods = Arrays.asList(this.getClass().getDeclaredMethods());
         Optional<Method> optMethod = methods.stream()
                 .filter(a -> a.getName().equals(action))
@@ -98,6 +76,19 @@ public abstract class Page {
             LOG.error("Action {} does not exist.", action);
         }
         return null;
+    }
+
+    public Page navigate() {
+        driver.get(getURL());
+        return this;
+    }
+
+    /**
+     * Function to get the current PAGE_URL.
+     * A page can override this function to get its url instead.
+     */
+    protected String getURL() {
+        return driver.getCurrentUrl();
     }
 
     protected void inputText(WebElement element, String text) {
@@ -129,9 +120,14 @@ public abstract class Page {
 
     protected abstract boolean isInPage();
 
-    public Page navigate() {
-        driver.get(getURL());
-        return this;
+    private void setFieldValue(String fieldName, String value, BiConsumer<WebElement, String> consumer) throws NoSuchFieldException {
+        try {
+            Field field = this.getClass().getDeclaredField(fieldName);
+            setFieldValue(field, value, consumer);
+        } catch (NoSuchFieldException e) {
+            LOG.error("Error when trying to set field value for field: " + fieldName + ".", e);
+            throw e;
+        }
     }
 
     private void setFieldValue(Field f, String value, BiConsumer<WebElement, String> consumer) {
