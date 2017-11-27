@@ -4,12 +4,16 @@ import com.fullstackmarc.fwkpoc.exceptions.PageNotMappedException;
 import com.fullstackmarc.fwkpoc.selenium.TestScope;
 import com.fullstackmarc.fwkpoc.selenium.pages.Page;
 import com.fullstackmarc.fwkpoc.selenium.pages.PageFactory;
+import org.hamcrest.Matchers;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Collection;
 
 @Steps
 public class CommonSteps {
@@ -41,12 +45,14 @@ public class CommonSteps {
     @When("the user does a $action")
     public void whenUserDoesAnAction(String action) {
         LOG.info("When the user does a {}.", action);
-        Page page = ((Page) testScope.get(CURRENT_PAGE)).invokeAction(action);
-        testScope.put(CURRENT_PAGE, page);
+        testScope.put(CURRENT_PAGE, ((Page) testScope.get(CURRENT_PAGE)).invokeAction(action));
     }
 
-    @Then("there should be $results")
+    @Then("there should be $collectionName")
     public void thenThereShouldBeResults(String collectionName) {
-
+        LOG.info("Then there should be {}.", collectionName);
+        Collection collection = (Collection) ((Page) testScope.get(CURRENT_PAGE)).getFieldValue(collectionName);
+        Assert.assertThat(collection, Matchers.notNullValue());
+        Assert.assertThat(collection.size(), Matchers.greaterThan(0));
     }
 }
