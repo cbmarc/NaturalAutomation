@@ -5,5 +5,5 @@ Scenario: Test scenario
 
 Given the user is in the Google page
 And the page is populated with random data
-When nothing happens
-Then nothing will happen
+When the user does a search
+Then there should be results

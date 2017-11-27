@@ -1,8 +1,8 @@
 package com.fullstackmarc.fwkpoc.selenium.pages;
 
-import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 @PageObject
 public class GooglePage extends Page implements Named {
@@ -13,11 +13,12 @@ public class GooglePage extends Page implements Named {
 
     private final GoogleResultsPage googleResultsPage;
 
-    @Value("${google.page.search.input.id}")
-    private String searchBoxId;
+    @InputData
+    @FindBy(id = "lst-ib")
+    private WebElement searchBox;
 
-    @Value("${google.page.search.button.name}")
-    private String searchButtonName;
+    @FindBy(name = "btnK")
+    private WebElement searchButton;
 
     @Autowired
     public GooglePage(GoogleResultsPage googleResultsPage) {
@@ -29,18 +30,24 @@ public class GooglePage extends Page implements Named {
         return PAGE_NAME;
     }
 
-    public GooglePage typeSearch(String text) {
-        getDriver().findElement(By.id(searchBoxId)).sendKeys(text);
-        return this;
+    public GoogleResultsPage search() {
+        click(searchButton);
+        return googleResultsPage;
     }
 
-    public GoogleResultsPage clickSearchButton() {
-        getDriver().findElement(By.name(searchButtonName)).click();
-        return googleResultsPage;
+    public GoogleResultsPage search(String text) {
+        inputText(searchBox, text);
+        return search();
     }
 
     @Override
     String getURL() {
         return PAGE_URL;
     }
+
+    @Override
+    boolean isInPage() {
+        return false;
+    }
+
 }
