@@ -9,6 +9,7 @@ import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
+import org.jbehave.core.model.ExamplesTable;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class CommonSteps {
         ((Page) testScope.get(CURRENT_PAGE)).fillDefaultData();
     }
 
-    @Given("I have written '$text' in the $field")
+    @Given("I have written '$text' in the $field field")
     public void givenTextInFieldIsWritten(@Named("text") String text, @Named("field") String field) throws NoSuchFieldException {
         ((Page) testScope.get(CURRENT_PAGE)).writeTextInField(field, text);
     }
@@ -55,6 +56,11 @@ public class CommonSteps {
     @Given("I have selected the '$option' option in the $field dropdown")
     public void givenSelectedOption(@Named("option") String option, @Named("field") String field) throws NoSuchFieldException {
         ((Page) testScope.get(CURRENT_PAGE)).selectOptionInField(field, option);
+    }
+
+    @Given("I want to add this data to the page $examples")
+    public void givenAddData(@Named("examples") ExamplesTable examples) throws NoSuchFieldException {
+        testScope.put("examples", examples);
     }
 
     @When("I $action")
