@@ -8,6 +8,7 @@ So that I can show off examples tables of all kinds to some people here
 Scenario: If we use auto form population
 Given I am in the MyFiddle page
 Given I populate the page with random data
+Given I have selected the 'Bleh' option in the stuff dropdown
 When I add
 Then there should be additions
 
