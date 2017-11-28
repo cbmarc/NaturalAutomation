@@ -22,11 +22,19 @@ Examples:
 |   textOne   |  Hello World  |
 |   textTwo   | ByeBye World  |
 
-Scenario: If we use a general examples table, the whole scenario will repeat one time for each row
+Scenario: If we use a specific examples table, the step will repeat for each row in the table
 Given I am in the MyFiddle page
-Given I have written these values in these fields
+Given I have written this value map:
 |    field    |      text     |
 |   textOne   |  Hello World  |
-|   textTwo   | ByeBye World  |
+|   textTwo   |  ByeBye World |
+When I add
+Then there should be additions
+
+Scenario: If we use a specific examples table, the step will repeat for each row in the table, guess what'll happenif we add another row?
+Given I am in the MyFiddle page
+Given I have written these values:
+|    textOne    |      textTwo     |
+|   HelloWorld  |     ByeByeWorld  |
 When I add
 Then there should be additions

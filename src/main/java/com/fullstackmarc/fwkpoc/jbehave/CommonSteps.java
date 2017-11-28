@@ -15,7 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Stream;
 
 @Steps
 public class CommonSteps {
@@ -58,19 +62,39 @@ public class CommonSteps {
         ((Page) testScope.get(CURRENT_PAGE)).selectOptionInField(field, option);
     }
 
-    @Given("I have written these values in these fields $examples")
-    public void givenAddData(@Named("examples") ExamplesTable examples) {
+    @Given("I have written this value map: $examples")
+    public void givenAddData(@Named("examples") ExamplesTable examples) throws Exception {
         Page page = (Page) testScope.get(CURRENT_PAGE);
         testScope.put("examples", examples);
+        final Set<Exception> nestedExceptions = new HashSet<>();
         // TODO: this should be able to handle all components
         examples.getRows()
                 .forEach(r -> {
                     try {
                         page.writeTextInField(r.get("field"), r.get("text"));
                     } catch (NoSuchFieldException e) {
-                        LOG.error("Field " + r.get("field") + " does not exist.", e);
+                        nestedExceptions.add(e);
                     }
                 });
+        processNestedExceptions(nestedExceptions);
+    }
+
+    @Given("I have written these values: $examples")
+    public void givenIHaveWrittenValues(@Named("examples") ExamplesTable examples) throws Exception {
+        Page page = (Page) testScope.get(CURRENT_PAGE);
+        testScope.put("examples", examples);
+        final Set<Exception> nestedExceptions = new HashSet<>();
+        // TODO: this should be able to handle all components
+        examples.getHeaders().forEach(h -> {
+            examples.getRows().forEach(r -> {
+                try {
+                    page.writeTextInField(h, r.get(h));
+                } catch (NoSuchFieldException e) {
+                    nestedExceptions.add(e);
+                }
+            });
+        });
+        processNestedExceptions(nestedExceptions);
     }
 
     @When("I $action")
@@ -85,5 +109,17 @@ public class CommonSteps {
         Collection collection = (Collection) ((Page) testScope.get(CURRENT_PAGE)).getFieldValue(collectionName);
         Assert.assertThat(collection, Matchers.notNullValue());
         Assert.assertThat(collection.size(), Matchers.greaterThan(0));
+    }
+
+    private void processNestedExceptions(Set<Exception> nestedExceptions) throws Exception {
+        if (nestedExceptions.size() > 0) {
+            Exception e = new Exception("Several exceptions found when writing data into fields.");
+            nestedExceptions.forEach(ne -> {
+                Stream<StackTraceElement> a = Arrays.stream(e.getStackTrace());
+                Stream<StackTraceElement> b = Arrays.stream(ne.getStackTrace());
+                e.setStackTrace(Stream.concat(a, b).toArray(StackTraceElement[]::new));
+            });
+            throw e;
+        }
     }
 }
