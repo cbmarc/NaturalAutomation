@@ -58,9 +58,19 @@ public class CommonSteps {
         ((Page) testScope.get(CURRENT_PAGE)).selectOptionInField(field, option);
     }
 
-    @Given("I want to add this data to the page $examples")
-    public void givenAddData(@Named("examples") ExamplesTable examples) throws NoSuchFieldException {
+    @Given("I have written these values in these fields $examples")
+    public void givenAddData(@Named("examples") ExamplesTable examples) {
+        Page page = (Page) testScope.get(CURRENT_PAGE);
         testScope.put("examples", examples);
+        // TODO: this should be able to handle all components
+        examples.getRows()
+                .forEach(r -> {
+                    try {
+                        page.writeTextInField(r.get("field"), r.get("text"));
+                    } catch (NoSuchFieldException e) {
+                        LOG.error("Field " + r.get("field") + " does not exist.", e);
+                    }
+                });
     }
 
     @When("I $action")
