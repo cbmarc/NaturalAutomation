@@ -14,7 +14,7 @@ import java.util.List;
 public class MyFiddlePage extends Page implements Named {
 
     private static final String PAGE_NAME = "MyFiddle";
-    private static final String PAGE_URL = "http://fiddle.jshell.net/smallpawn/dsnpc1nj/4/show/light/";
+    private static final String PAGE_URL = "http://fiddle.jshell.net/smallpawn/dsnpc1nj/9/show/light/";
 
     @InputData
     @FindBy(id = "textone")
@@ -26,6 +26,9 @@ public class MyFiddlePage extends Page implements Named {
 
     @FindBy(id = "btn-add")
     private WebElement btnAdd;
+
+    @FindBy(id = "stuff")
+    private WebElement stuff;
 
     @FindBy(className = "new-div")
     private List<WebElement> additions;
