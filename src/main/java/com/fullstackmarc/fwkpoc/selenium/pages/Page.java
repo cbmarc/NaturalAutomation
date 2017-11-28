@@ -29,6 +29,10 @@ public abstract class Page {
         this.driver = driver;
     }
 
+    public WebDriver getDriver() {
+        return driver;
+    }
+
     public void fillDefaultData() {
         List<Field> fields = Arrays.asList(this.getClass().getDeclaredFields());
         fields.stream()
@@ -80,6 +84,8 @@ public abstract class Page {
 
     public Page navigate() {
         driver.get(getURL());
+        selectIFrame();
+        if (!isInPage()) return null;
         return this;
     }
 
@@ -119,6 +125,14 @@ public abstract class Page {
     }
 
     protected abstract boolean isInPage();
+
+
+    /**
+     * Defaults to no iframe
+     */
+    protected void selectIFrame() {
+        driver.switchTo().defaultContent();
+    }
 
     private void setFieldValue(String fieldName, String value, BiConsumer<WebElement, String> consumer) throws NoSuchFieldException {
         try {

@@ -37,7 +37,7 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
 
 
     public AbstractSpringJBehaveStories() {
-        useEmbedder(new SpringInjectableEmbedder().injectedEmbedder());
+
     }
 
     @Override
@@ -71,7 +71,12 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
     @Override
     protected List<String> storyPaths() {
         StoryFinder finder = new StoryFinder();
-        return finder.findPaths(codeLocationFromClass(this.getClass()).getFile(), Arrays.asList("**/*.story"), Arrays.asList(""));
+        String storyProperty = System.getProperty("story");
+        String stories = "*.story";
+        if (storyProperty != null && !storyProperty.isEmpty()) {
+            stories = storyProperty + ".story";
+        }
+        return finder.findPaths(codeLocationFromClass(this.getClass()).getFile(), Arrays.asList("**/" + stories), Arrays.asList(""));
     }
 
 }
