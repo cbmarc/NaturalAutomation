@@ -24,7 +24,7 @@ Examples:
 
 Scenario: If we use a specific examples table, the step will repeat for each row in the table
 Given I am in the MyFiddle page
-Given I have written this value map:
+Given I have populated it with this value map:
 |    field    |      text     |
 |   textOne   |  Hello World  |
 |   textTwo   |  ByeBye World |

@@ -23,6 +23,6 @@ public class GoogleResultsPage extends Page implements Named {
 
     @Override
     protected boolean isInPage() {
-        return false;
+        return true;
     }
 }

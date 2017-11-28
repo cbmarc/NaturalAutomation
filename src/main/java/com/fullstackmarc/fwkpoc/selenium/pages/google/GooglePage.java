@@ -50,7 +50,7 @@ public class GooglePage extends Page implements Named {
 
     @Override
     protected boolean isInPage() {
-        return false;
+        return true;
     }
 
 }

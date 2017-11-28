@@ -58,7 +58,7 @@ public class CommonSteps {
         ((Page) testScope.get(CURRENT_PAGE)).selectOptionInField(field, option);
     }
 
-    @Given("I have written this value map: $examples")
+    @Given("I have populated it with this value map: $examples")
     public void givenAddData(@Named("examples") ExamplesTable examples) throws Exception {
         Page page = (Page) testScope.get(CURRENT_PAGE);
         testScope.put("examples", examples);
