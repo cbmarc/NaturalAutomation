@@ -30,10 +30,6 @@ public class CommonSteps {
     private final PageFactory pageFactory;
     private final TestScope testScope;
 
-    private String currentStory;
-
-
-
     @Autowired
     public CommonSteps(PageFactory pageFactory, TestScope testScope) {
         this.pageFactory = pageFactory;
