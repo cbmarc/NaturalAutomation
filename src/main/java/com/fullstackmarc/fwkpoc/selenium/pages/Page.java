@@ -1,5 +1,6 @@
 package com.fullstackmarc.fwkpoc.selenium.pages;
 
+import com.fullstackmarc.fwkpoc.exceptions.NotInPageException;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -31,6 +32,10 @@ public abstract class Page {
 
     public WebDriver getDriver() {
         return driver;
+    }
+
+    public String getTitle() {
+        return driver.getTitle();
     }
 
     public void fillDefaultData() {
@@ -82,10 +87,10 @@ public abstract class Page {
         return null;
     }
 
-    public Page navigate() {
+    public Page navigate() throws NotInPageException {
         driver.get(getURL());
         selectIFrame();
-        if (!isInPage()) return null;
+        if (!isInPage()) throw new NotInPageException(this);
         return this;
     }
 

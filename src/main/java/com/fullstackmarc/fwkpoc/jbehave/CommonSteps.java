@@ -1,5 +1,6 @@
 package com.fullstackmarc.fwkpoc.jbehave;
 
+import com.fullstackmarc.fwkpoc.exceptions.NotInPageException;
 import com.fullstackmarc.fwkpoc.exceptions.PageNotMappedException;
 import com.fullstackmarc.fwkpoc.selenium.TestScope;
 import com.fullstackmarc.fwkpoc.selenium.pages.Page;
@@ -37,7 +38,7 @@ public class CommonSteps {
     }
 
     @Given("I am in the $page page")
-    public void givenUserInPage(@Named("page") String page) throws PageNotMappedException {
+    public void givenUserInPage(@Named("page") String page) throws PageNotMappedException, NotInPageException {
         LOG.info("Given the user is in the {} page.", page);
         testScope.put(CURRENT_PAGE, pageFactory.getPage(page).navigate());
     }
