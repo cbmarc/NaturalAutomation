@@ -20,7 +20,7 @@ public class Application {
     @Bean(destroyMethod = "quit")
     public WebDriver driver() throws IOException {
         Path basePath = Paths.get("target/").toAbsolutePath();
-        System.setProperty("webdriver.chrome.driver", basePath + "/drivers/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", basePath + "/drivers/chromedriver");
         return new ChromeDriver();
     }
 
