@@ -11,4 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @AcceptanceTest
 public class JBehaveStoriesIT extends AbstractSpringJBehaveStories {
+
+
 }
