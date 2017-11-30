@@ -1,9 +1,9 @@
-package com.naturalautomation.selenium.pages.myfiddle;
+package com.fullstackmarc.fwkpoc.selenium.pages.google;
 
-import com.naturalautomation.selenium.pages.InputData;
-import com.naturalautomation.selenium.pages.Named;
-import com.naturalautomation.selenium.pages.Page;
-import com.naturalautomation.selenium.pages.PageObject;
+import com.fullstackmarc.fwkpoc.selenium.pages.InputData;
+import com.fullstackmarc.fwkpoc.selenium.pages.Named;
+import com.fullstackmarc.fwkpoc.selenium.pages.Page;
+import com.fullstackmarc.fwkpoc.selenium.pages.PageObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -56,7 +56,6 @@ public class MyFiddlePage extends Page implements Named {
     @Override
     protected void selectIFrame() {
         getDriver().switchTo().defaultContent();
-        List<WebElement> iframes = getDriver().findElements(By.tagName("iframe"));
-        iframes.stream().findFirst().ifPresent(iframe -> getDriver().switchTo().frame(iframe));
+        getDriver().switchTo().frame( getDriver().findElements(By.tagName("iframe")).get(0));
     }
 }
