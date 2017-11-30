@@ -10,7 +10,5 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AcceptanceTest
-public class JBehaveStoriesTest extends AbstractSpringJBehaveStories {
-
-
+public class JBehaveStoriesIT extends AbstractSpringJBehaveStories {
 }
