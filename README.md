@@ -12,16 +12,12 @@ First run:
 mvn clean install
 ```
 
-<<<<<<< HEAD
 Once run the chromedriver will be downloaded in your target under target/driver/. Now you can either run a 
-=======
 
 To execute the integration test
->>>>>>> adding a profile for integration-test
 ```
 mvn clean install -P windows,integration-test
 ```
-
 
 ## Goal ##
 
