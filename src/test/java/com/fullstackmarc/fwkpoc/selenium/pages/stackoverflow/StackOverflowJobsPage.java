@@ -1,4 +1,4 @@
-package com.fullstackmarc.fwkpoc.selenium.pages.google;
+package com.fullstackmarc.fwkpoc.selenium.pages.stackoverflow;
 
 import com.fullstackmarc.fwkpoc.selenium.pages.Named;
 import com.fullstackmarc.fwkpoc.selenium.pages.Page;
