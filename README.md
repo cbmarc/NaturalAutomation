@@ -14,12 +14,9 @@ mvn clean install
 
 Once run the chromedriver will be downloaded in your target under target/driver/. Now you can either run a 
 ```
-mvn integration-test 
-``` 
-or run from your IDE:
-```
 com.fullstackmarc.fwkpoc.selenium.JBehaveStoriesIT
 ```
+class under test scope.
 ## Goal ##
 
 The goal is to have a skeleton framework to use wherever needed, easily extendable and well documented. Obviously that goal is still a tad too far :)
