@@ -169,6 +169,16 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
     <profiles>
@@ -188,6 +198,18 @@
                 <chromedriver.url>https://chromedriver.storage.googleapis.com/2.33/chromedriver_mac64.zip</chromedriver.url>
                 <chromedriver.md5>3d520b8ede8e9deb8c9a2efe2aec5f35</chromedriver.md5>
             </properties>
+        </profile>
+
+        <profile>
+            <id>integration-test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>
