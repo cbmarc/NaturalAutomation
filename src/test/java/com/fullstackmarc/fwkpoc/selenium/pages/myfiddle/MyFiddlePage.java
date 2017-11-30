@@ -1,4 +1,4 @@
-package com.fullstackmarc.fwkpoc.selenium.pages.google;
+package com.fullstackmarc.fwkpoc.selenium.pages.myfiddle;
 
 import com.fullstackmarc.fwkpoc.selenium.pages.InputData;
 import com.fullstackmarc.fwkpoc.selenium.pages.Named;
