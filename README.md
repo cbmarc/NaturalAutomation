@@ -20,4 +20,4 @@ com.fullstackmarc.fwkpoc.selenium.JBehaveStoriesTest
 class under test scope.
 ## Goal ##
 
-The goal is to have a skeleton framework to use wherever needed, easily extendable and well documented. Obviously that goal is still a tad to far :)
+The goal is to have a skeleton framework to use wherever needed, easily extendable and well documented. Obviously that goal is still a tad too far :)
