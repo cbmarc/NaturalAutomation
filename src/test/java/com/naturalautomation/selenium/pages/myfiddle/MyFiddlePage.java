@@ -1,6 +1,7 @@
 package com.naturalautomation.selenium.pages.myfiddle;
 
 
+import com.naturalautomation.selenium.components.html.HtmlComponent;
 import com.naturalautomation.selenium.pages.InputData;
 import com.naturalautomation.selenium.pages.Named;
 import com.naturalautomation.selenium.pages.Page;
@@ -19,23 +20,23 @@ public class MyFiddlePage extends Page implements Named {
 
     @InputData
     @FindBy(id = "textone")
-    private WebElement textOne;
+    private HtmlComponent textOne;
 
     @InputData
     @FindBy(id = "texttwo")
-    private WebElement textTwo;
+    private HtmlComponent textTwo;
 
     @FindBy(id = "btn-add")
-    private WebElement btnAdd;
+    private HtmlComponent btnAdd;
 
     @FindBy(id = "stuff")
-    private WebElement stuff;
+    private HtmlComponent stuff;
 
     @FindBy(className = "new-div")
-    private List<WebElement> additions;
+    private List<HtmlComponent> additions;
 
     public MyFiddlePage add() {
-        click(btnAdd);
+        btnAdd.click();
         return this;
     }
 

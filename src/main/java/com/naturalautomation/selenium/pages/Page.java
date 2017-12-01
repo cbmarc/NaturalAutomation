@@ -1,11 +1,9 @@
 package com.naturalautomation.selenium.pages;
 
 import com.naturalautomation.exceptions.NotInPageException;
-import org.openqa.selenium.Keys;
+import com.naturalautomation.selenium.components.html.HtmlComponent;
+import com.naturalautomation.selenium.components.html.SelectInput;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 import static io.github.benas.randombeans.api.EnhancedRandom.random;
 
@@ -39,11 +38,9 @@ public abstract class Page {
     }
 
     public void fillDefaultData() {
-        List<Field> fields = Arrays.asList(this.getClass().getDeclaredFields());
-        fields.stream()
+        Stream.of(this.getClass().getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(InputData.class))
-                .forEach(f -> this.setFieldValue(f, random(String.class), this::inputText));
-
+                .forEach(f -> setFieldValue(f, random(String.class), HtmlComponent::type));
     }
 
     public Object getFieldValue(String fieldName) throws NoSuchFieldException, IllegalAccessException {
@@ -62,11 +59,11 @@ public abstract class Page {
     }
 
     public void writeTextInField(String fieldName, String value) throws NoSuchFieldException {
-        this.setFieldValue(fieldName, value, this::inputText);
+        this.setFieldValue(fieldName, value, HtmlComponent::type);
     }
 
     public void selectOptionInField(String fieldName, String value) throws NoSuchFieldException {
-        this.setFieldValue(fieldName, value, this::chooseOptionFromSelect);
+        this.setFieldValue(fieldName, value, (htmlComponent, s) -> ((SelectInput)htmlComponent).chooseOption(s));
     }
 
     public Page invokeAction(String action, Object... params) {
@@ -102,33 +99,6 @@ public abstract class Page {
         return driver.getCurrentUrl();
     }
 
-    protected void inputText(WebElement element, String text) {
-        Actions actions = new Actions(driver);
-        actions
-                .moveToElement(element)
-                .click(element)
-                .sendKeys(element, text)
-                .build().perform();
-        LOG.info("Sending text to element: {}", text);
-    }
-
-    protected void chooseOptionFromSelect(WebElement element, String text) {
-        Select select = new Select(element);
-        select.selectByVisibleText(text);
-    }
-
-    protected void pressEnter(WebElement element) {
-        Actions actions = new Actions(driver);
-        actions.moveToElement(element)
-                .sendKeys(element, Keys.ENTER)
-                .build().perform();
-    }
-
-    protected void click(WebElement element) {
-        Actions actions = new Actions(driver);
-        actions.click(element).build().perform();
-    }
-
     protected abstract boolean isInPage();
 
 
@@ -139,7 +109,7 @@ public abstract class Page {
         driver.switchTo().defaultContent();
     }
 
-    private void setFieldValue(String fieldName, String value, BiConsumer<WebElement, String> consumer) throws NoSuchFieldException {
+    private void setFieldValue(String fieldName, String value, BiConsumer<HtmlComponent, String> consumer) throws NoSuchFieldException {
         try {
             Field field = this.getClass().getDeclaredField(fieldName);
             setFieldValue(field, value, consumer);
@@ -149,11 +119,11 @@ public abstract class Page {
         }
     }
 
-    private void setFieldValue(Field f, String value, BiConsumer<WebElement, String> consumer) {
+    private void setFieldValue(Field f, String value, BiConsumer<HtmlComponent, String> consumer) {
         try {
             f.setAccessible(true);
-            WebElement element = (WebElement) f.get(this);
-            click(element);
+            HtmlComponent element = (HtmlComponent) f.get(this);
+            element.click();
             consumer.accept(element, value);
             f.setAccessible(false);
         } catch (IllegalAccessException e) {
