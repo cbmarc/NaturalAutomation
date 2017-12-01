@@ -1,6 +1,7 @@
 package com.naturalautomation.selenium.pages.google;
 
 
+import com.naturalautomation.selenium.components.html.HtmlComponent;
 import com.naturalautomation.selenium.pages.Named;
 import com.naturalautomation.selenium.pages.Page;
 import com.naturalautomation.selenium.pages.PageObject;
@@ -15,7 +16,7 @@ public class GoogleResultsPage extends Page implements Named {
     private static final String PAGE_NAME = "Google results";
 
     @FindBy(className = "g")
-    private List<WebElement> results;
+    private List<HtmlComponent> results;
 
     @Override
     public String getName() {

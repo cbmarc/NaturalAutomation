@@ -1,6 +1,7 @@
 package com.naturalautomation.selenium.pages.stackoverflow;
 
 
+import com.naturalautomation.selenium.components.html.HtmlComponent;
 import com.naturalautomation.selenium.pages.Named;
 import com.naturalautomation.selenium.pages.Page;
 import com.naturalautomation.selenium.pages.PageObject;
@@ -17,19 +18,19 @@ public class StackOverflowJobsPage extends Page implements Named {
     private static final String PAGE_URL = "https://stackoverflow.com/jobs";
 
     @FindBy(id = "nav-jobs")
-    private WebElement jobsMenuLink;
+    private HtmlComponent jobsMenuLink;
 
     @FindBy(id = "q")
-    private WebElement searchBox;
+    private HtmlComponent searchBox;
 
     @FindBy(id = "l")
-    private WebElement locationBox;
+    private HtmlComponent locationBox;
 
     @FindBy(id = "sorting-options")
-    private WebElement sortedBy;
+    private HtmlComponent sortedBy;
 
     @FindBy(className = "-job")
-    private List<WebElement> results;
+    private List<HtmlComponent> results;
 
     @Override
     public String getName() {
@@ -47,7 +48,7 @@ public class StackOverflowJobsPage extends Page implements Named {
     }
 
     public StackOverflowJobsPage search() {
-        pressEnter(searchBox);
+        searchBox.pressEnter();
         return this;
     }
 

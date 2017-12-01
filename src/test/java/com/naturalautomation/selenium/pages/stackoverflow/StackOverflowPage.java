@@ -1,6 +1,7 @@
 package com.naturalautomation.selenium.pages.stackoverflow;
 
 
+import com.naturalautomation.selenium.components.html.HtmlComponent;
 import com.naturalautomation.selenium.pages.Named;
 import com.naturalautomation.selenium.pages.Page;
 import com.naturalautomation.selenium.pages.PageObject;
@@ -17,10 +18,10 @@ public class StackOverflowPage extends Page implements Named {
     private final StackOverflowJobsPage jobsPage;
 
     @FindBy(id = "h-top-questions")
-    private WebElement questionsHeader;
+    private HtmlComponent questionsHeader;
 
     @FindBy(id = "nav-jobs")
-    private WebElement jobsMenuLink;
+    private HtmlComponent jobsMenuLink;
 
     @Autowired
     public StackOverflowPage(StackOverflowJobsPage jobsPage) {
@@ -43,7 +44,7 @@ public class StackOverflowPage extends Page implements Named {
     }
 
     public StackOverflowJobsPage navigateToJobs() {
-        click(jobsMenuLink);
+        jobsMenuLink.click();
         if (!isInPage()) {
             throw new IllegalStateException("I should be in jobs page but I'm not.");
         }
