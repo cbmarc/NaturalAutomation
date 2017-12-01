@@ -1,5 +1,6 @@
 package com.naturalautomation.selenium.pages.myfiddle;
 
+
 import com.naturalautomation.selenium.pages.InputData;
 import com.naturalautomation.selenium.pages.Named;
 import com.naturalautomation.selenium.pages.Page;

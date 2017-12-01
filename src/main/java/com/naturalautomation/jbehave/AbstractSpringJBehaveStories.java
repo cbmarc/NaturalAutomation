@@ -16,14 +16,19 @@ import org.jbehave.core.steps.ParameterConverters;
 import org.jbehave.core.steps.SilentStepMonitor;
 import org.jbehave.core.steps.StepMonitor;
 import org.jbehave.core.steps.spring.SpringStepsFactory;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class AbstractSpringJBehaveStories extends JUnitStories {
 
     @Autowired
@@ -33,7 +38,6 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
             .withJsonOnly();
 
     private StepMonitor stepMonitor = new SilentStepMonitor();
-
 
 
     public AbstractSpringJBehaveStories() {
@@ -54,13 +58,13 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
                 .withCrossReference(crossReference);
 
         return new MostUsefulConfiguration()
-                .useFailureStrategy( new FailingUponPendingStep() )
-                .useStepPatternParser( new RegexPrefixCapturingPatternParser( "$" ) )
-                .useStoryControls( new SpringStoryControls().doResetStateBeforeScenario( false ) )
-                .useStoryLoader( new LoadFromClasspath( this.getClass() ) )
-                .useStoryReporterBuilder( reporterBuilder )
-                .useParameterConverters( parameterConverters )
-                .useStepMonitor( stepMonitor );
+                .useFailureStrategy(new FailingUponPendingStep())
+                .useStepPatternParser(new RegexPrefixCapturingPatternParser("$"))
+                .useStoryControls(new SpringStoryControls().doResetStateBeforeScenario(false))
+                .useStoryLoader(new LoadFromClasspath(this.getClass()))
+                .useStoryReporterBuilder(reporterBuilder)
+                .useParameterConverters(parameterConverters)
+                .useStepMonitor(stepMonitor);
     }
 
     @Override
