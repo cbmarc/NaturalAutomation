@@ -1,5 +1,7 @@
-# SeleniumJBehavePoC #
 
+![CI status](https://travis-ci.org/cbmarc/NaturalAutomation.svg?branch=develop)
+# NaturalAutomation #
+THIS IS STILL A WORK IN PROGRESS
 ## Description ##
 
 For now this is a prove of concept of Jbehave and Selenium using spring-boot.
