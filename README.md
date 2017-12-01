@@ -15,7 +15,7 @@ The skip tests is because right now I have not separated unit test from integrat
 
 Once, run the chromedriver will be downloaded in your target under target/driver/. Now you can either run a mvn test or run the 
 ```
-com.fullstackmarc.fwkpoc.selenium.JBehaveStoriesIT
+com.naturalautomation.JBehaveStoriesIT
 ```
 class under test scope.
 ## Goal ##

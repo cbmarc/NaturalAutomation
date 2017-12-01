@@ -1,8 +1,9 @@
-package com.fullstackmarc.fwkpoc.selenium.pages.google;
+package com.naturalautomation.selenium.pages.stackoverflow;
 
-import com.fullstackmarc.fwkpoc.selenium.pages.Named;
-import com.fullstackmarc.fwkpoc.selenium.pages.Page;
-import com.fullstackmarc.fwkpoc.selenium.pages.PageObject;
+
+import com.naturalautomation.selenium.pages.Named;
+import com.naturalautomation.selenium.pages.Page;
+import com.naturalautomation.selenium.pages.PageObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
