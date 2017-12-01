@@ -57,6 +57,7 @@ public class MyFiddlePage extends Page implements Named {
     @Override
     protected void selectIFrame() {
         getDriver().switchTo().defaultContent();
-        getDriver().switchTo().frame( getDriver().findElements(By.tagName("iframe")).get(0));
+        List<WebElement> iframes = getDriver().findElements(By.tagName("iframe"));
+        iframes.stream().findFirst().ifPresent(iframe -> getDriver().switchTo().frame(iframe));
     }
 }
