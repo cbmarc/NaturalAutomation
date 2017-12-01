@@ -4,7 +4,7 @@
 THIS IS STILL A WORK IN PROGRESS
 ## Description ##
 
-For now this is a prove of concept of Jbehave and Selenium using spring-boot.
+Ongoing automation framework based on JBehave, Selenium and Spring. 
 
 This is a WorkInProgress project. I do it in my free time and there is no finish date defined.
 
