@@ -1,13 +1,10 @@
 package com.naturalautomation.selenium.pages.google;
 
-
-import com.naturalautomation.selenium.components.html.HtmlComponent;
-import com.naturalautomation.selenium.components.html.HtmlElement;
+import com.naturalautomation.selenium.element.base.Element;
 import com.naturalautomation.selenium.pages.InputData;
 import com.naturalautomation.selenium.pages.Named;
 import com.naturalautomation.selenium.pages.Page;
 import com.naturalautomation.selenium.pages.PageObject;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,10 +18,10 @@ public class GooglePage extends Page implements Named {
 
     @InputData
     @FindBy(id = "lst-ib")
-    private HtmlComponent searchBox;
+    private Element searchBox;
 
     @FindBy(name = "btnK")
-    private HtmlComponent searchButton;
+    private Element searchButton;
 
     @Autowired
     public GooglePage(GoogleResultsPage googleResultsPage) {
@@ -37,12 +34,12 @@ public class GooglePage extends Page implements Named {
     }
 
     public GoogleResultsPage search() {
-        //searchBox.pressEnter();
+        searchBox.pressEnter();
         return googleResultsPage;
     }
 
     public GoogleResultsPage search(String text) {
-        //searchBox.type(text);
+        searchBox.sendKeys(text);
         return search();
     }
 
