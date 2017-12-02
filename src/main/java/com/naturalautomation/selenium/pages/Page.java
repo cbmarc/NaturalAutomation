@@ -1,8 +1,8 @@
 package com.naturalautomation.selenium.pages;
 
 import com.naturalautomation.exceptions.NotInPageException;
-import com.naturalautomation.selenium.components.html.HtmlComponent;
 import com.naturalautomation.selenium.components.html.SelectInput;
+import com.naturalautomation.selenium.element.base.Element;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ public abstract class Page {
     public void fillDefaultData() {
         Stream.of(this.getClass().getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(InputData.class))
-                .forEach(f -> setFieldValue(f, random(String.class), HtmlComponent::type));
+                .forEach(f -> setFieldValue(f, random(String.class), Element::sendKeys));
     }
 
     public Object getFieldValue(String fieldName) throws NoSuchFieldException, IllegalAccessException {
@@ -58,12 +58,12 @@ public abstract class Page {
         }
     }
 
-    public void writeTextInField(String fieldName, String value) throws NoSuchFieldException {
-        this.setFieldValue(fieldName, value, HtmlComponent::type);
+    public void writeTextInField(String fieldName, CharSequence value) throws NoSuchFieldException {
+        this.setFieldValue(fieldName, value, Element::sendKeys);
     }
 
     public void selectOptionInField(String fieldName, String value) throws NoSuchFieldException {
-        this.setFieldValue(fieldName, value, (htmlComponent, s) -> ((SelectInput)htmlComponent).chooseOption(s));
+        this.setFieldValue(fieldName, value, (htmlComponent, s) -> ((SelectInput) htmlComponent).chooseOption(s.toString()));
     }
 
     public Page invokeAction(String action, Object... params) {
@@ -109,7 +109,7 @@ public abstract class Page {
         driver.switchTo().defaultContent();
     }
 
-    private void setFieldValue(String fieldName, String value, BiConsumer<HtmlComponent, String> consumer) throws NoSuchFieldException {
+    private void setFieldValue(String fieldName, CharSequence value, BiConsumer<Element, CharSequence> consumer) throws NoSuchFieldException {
         try {
             Field field = this.getClass().getDeclaredField(fieldName);
             setFieldValue(field, value, consumer);
@@ -119,10 +119,10 @@ public abstract class Page {
         }
     }
 
-    private void setFieldValue(Field f, String value, BiConsumer<HtmlComponent, String> consumer) {
+    private void setFieldValue(Field f, CharSequence value, BiConsumer<Element, CharSequence> consumer) {
         try {
             f.setAccessible(true);
-            HtmlComponent element = (HtmlComponent) f.get(this);
+            Element element = (Element) f.get(this);
             element.click();
             consumer.accept(element, value);
             f.setAccessible(false);

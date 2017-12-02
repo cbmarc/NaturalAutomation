@@ -1,8 +1,8 @@
 package com.naturalautomation.selenium;
 
+import com.naturalautomation.selenium.element.factory.api.ElementFactory;
 import com.naturalautomation.selenium.pages.PageObject;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.PageFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -17,7 +17,7 @@ public class PageObjectBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (bean.getClass().isAnnotationPresent(PageObject.class)) {
-            PageFactory.initElements(driver, bean);
+            ElementFactory.initElements(driver, bean);
         }
         return bean;
     }
