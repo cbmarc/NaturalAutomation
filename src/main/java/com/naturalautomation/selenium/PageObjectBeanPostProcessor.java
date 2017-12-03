@@ -1,6 +1,6 @@
 package com.naturalautomation.selenium;
 
-import com.naturalautomation.selenium.element.factory.api.ElementFactory;
+import com.naturalautomation.selenium.element.factory.ElementFactory;
 import com.naturalautomation.selenium.pages.PageObject;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.BeansException;

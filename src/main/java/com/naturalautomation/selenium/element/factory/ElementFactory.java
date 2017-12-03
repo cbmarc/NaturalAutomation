@@ -1,6 +1,5 @@
-package com.naturalautomation.selenium.element.factory.api;
+package com.naturalautomation.selenium.element.factory;
 
-import com.naturalautomation.selenium.element.factory.internal.ElementDecorator;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
