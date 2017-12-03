@@ -2,7 +2,7 @@ package com.naturalautomation.selenium.pages;
 
 import com.naturalautomation.exceptions.NotInPageException;
 import com.naturalautomation.selenium.components.html.SelectInput;
-import com.naturalautomation.selenium.element.base.Element;
+import com.naturalautomation.selenium.element.Element;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

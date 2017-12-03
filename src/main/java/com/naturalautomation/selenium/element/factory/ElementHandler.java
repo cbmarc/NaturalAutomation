@@ -1,6 +1,6 @@
 package com.naturalautomation.selenium.element.factory;
 
-import com.naturalautomation.selenium.element.base.Element;
+import com.naturalautomation.selenium.element.Element;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,10 +13,6 @@ import java.lang.reflect.Method;
 
 import static com.naturalautomation.reflection.ReflectionUtils.getWrapperClass;
 
-/**
- * Replaces DefaultLocatingElementHandler. Simply opens it up to descendants of the WebElement interface, and other
- * mix-ins of WebElement and Locatable, etc. Saves the wrapping type for calling the constructor of the wrapped classes.
- */
 public class ElementHandler implements InvocationHandler {
     private final ElementLocator locator;
     private final Class<?> wrappingType;

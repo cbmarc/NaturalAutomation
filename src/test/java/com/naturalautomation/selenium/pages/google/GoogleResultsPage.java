@@ -1,7 +1,7 @@
 package com.naturalautomation.selenium.pages.google;
 
 
-import com.naturalautomation.selenium.element.base.Element;
+import com.naturalautomation.selenium.element.Element;
 import com.naturalautomation.selenium.pages.Named;
 import com.naturalautomation.selenium.pages.Page;
 import com.naturalautomation.selenium.pages.PageObject;
