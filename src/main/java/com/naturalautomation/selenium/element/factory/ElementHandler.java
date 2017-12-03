@@ -1,4 +1,4 @@
-package com.naturalautomation.selenium.element.factory.internal;
+package com.naturalautomation.selenium.element.factory;
 
 import com.naturalautomation.selenium.element.base.Element;
 import org.openqa.selenium.NoSuchElementException;
@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static com.naturalautomation.selenium.element.factory.internal.ImplementedByProcessor.getWrapperClass;
+import static com.naturalautomation.reflection.ReflectionUtils.getWrapperClass;
 
 /**
  * Replaces DefaultLocatingElementHandler. Simply opens it up to descendants of the WebElement interface, and other
@@ -35,7 +35,6 @@ public class ElementHandler implements InvocationHandler {
         if (!Element.class.isAssignableFrom(interfaceType)) {
             throw new RuntimeException("interface not assignable to Element.");
         }
-
         this.wrappingType = getWrapperClass(interfaceType);
     }
 

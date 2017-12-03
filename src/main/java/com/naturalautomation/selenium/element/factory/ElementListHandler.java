@@ -1,4 +1,4 @@
-package com.naturalautomation.selenium.element.factory.internal;
+package com.naturalautomation.selenium.element.factory;
 
 import com.naturalautomation.selenium.element.base.Element;
 import org.openqa.selenium.WebDriver;
@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.naturalautomation.selenium.element.factory.internal.ImplementedByProcessor.getWrapperClass;
+import static com.naturalautomation.reflection.ReflectionUtils.getWrapperClass;
 
 /**
  * Wraps a list of WebElements in multiple wrapped elements.

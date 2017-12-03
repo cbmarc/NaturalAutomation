@@ -124,11 +124,6 @@ public class ElementImpl implements Element {
     }
 
     @Override
-    public boolean elementWired() {
-        return (element != null);
-    }
-
-    @Override
     public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
         return element.getScreenshotAs(target);
     }

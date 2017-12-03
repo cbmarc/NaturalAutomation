@@ -1,8 +1,7 @@
-package com.naturalautomation.selenium.element.factory.internal;
+package com.naturalautomation.selenium.element.factory;
 
 import com.naturalautomation.selenium.element.base.Element;
 import com.naturalautomation.selenium.element.base.ElementImpl;
-import com.naturalautomation.selenium.element.base.ImplementedBy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.Locatable;
@@ -13,7 +12,6 @@ import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.pagefactory.ElementLocator;
 import org.openqa.selenium.support.pagefactory.ElementLocatorFactory;
 import org.openqa.selenium.support.pagefactory.FieldDecorator;
-import org.openqa.selenium.support.pagefactory.internal.LocatingElementListHandler;
 
 import java.lang.reflect.*;
 import java.util.List;
@@ -112,7 +110,7 @@ public class ElementDecorator implements FieldDecorator {
      * @param <T>           The interface of the proxy.
      * @return a proxy representing the class we need to wrap.
      */
-    protected <T> T proxyForLocator(ClassLoader loader, Class<T> interfaceType, ElementLocator locator) {
+    private <T> T proxyForLocator(ClassLoader loader, Class<T> interfaceType, ElementLocator locator) {
         InvocationHandler handler = new ElementHandler(interfaceType, locator, driver);
 
         T proxy;
@@ -131,13 +129,9 @@ public class ElementDecorator implements FieldDecorator {
      * @return proxy with the same type as we started with.
      */
     @SuppressWarnings("unchecked")
-    protected <T> List<T> proxyForListLocator(ClassLoader loader, Class<T> interfaceType, ElementLocator locator) {
-        InvocationHandler handler;
-        if (interfaceType.getAnnotation(ImplementedBy.class) != null) {
-            handler = new ElementListHandler(interfaceType, locator, driver);
-        } else {
-            handler = new LocatingElementListHandler(locator);
-        }
+    private <T> List<T> proxyForListLocator(ClassLoader loader, Class<T> interfaceType, ElementLocator locator) {
+        InvocationHandler handler = new ElementListHandler(interfaceType, locator, driver);
+
         List<T> proxy;
         proxy = (List<T>) Proxy.newProxyInstance(
                 loader, new Class[]{List.class}, handler);
