@@ -1,6 +1,6 @@
 package com.naturalautomation.selenium.element.factory;
 
-import com.naturalautomation.selenium.element.base.Element;
+import com.naturalautomation.selenium.element.Element;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.pagefactory.ElementLocator;

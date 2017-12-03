@@ -1,4 +1,4 @@
-package com.naturalautomation.selenium.element.base;
+package com.naturalautomation.selenium.element;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -7,16 +7,12 @@ import org.openqa.selenium.internal.Locatable;
 
 import java.util.List;
 
-/**
- * An implementation of the Element interface. Delegates its work to an underlying WebElement instance for
- * custom functionality.
- */
-public class ElementImpl implements Element {
+public class DefaultElement implements Element {
 
     private final WebElement element;
     private final WebDriver driver;
 
-    public ElementImpl(final WebElement element, final WebDriver driver) {
+    public DefaultElement(final WebElement element, final WebDriver driver) {
         this.element = element;
         this.driver = driver;
     }
