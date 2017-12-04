@@ -16,10 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Stream;
 
 @Steps
 public class CommonSteps {
@@ -49,29 +46,27 @@ public class CommonSteps {
     }
 
     @Given("I have written '$text' in the $field field")
-    public void givenTextInFieldIsWritten(@Named("text") String text, @Named("field") String field) throws NoSuchFieldException, IllegalAccessException {
+    public void givenTextInFieldIsWritten(@Named("text") String text, @Named("field") String field) {
         ((Page) testScope.get(CURRENT_PAGE)).setFieldValue(field, text);
     }
 
     @Given("I have selected the '$option' option in the $field dropdown")
-    public void givenSelectedOption(@Named("option") String option, @Named("field") String field) throws NoSuchFieldException, IllegalAccessException {
+    public void givenSelectedOption(@Named("option") String option, @Named("field") String field) {
         ((Page) testScope.get(CURRENT_PAGE)).setFieldValue(field, option);
     }
 
     @Given("I have populated it with this value map: $examples")
-    public void givenAddData(@Named("examples") ExamplesTable examples) throws Exception {
+    public void givenAddData(@Named("examples") ExamplesTable examples) {
         Page page = (Page) testScope.get(CURRENT_PAGE);
         testScope.put("examples", examples);
-        Set<Exception> nestedExceptions = page.importKeyValuePairsIntoFields(examples.getRows());
-        processNestedExceptions(nestedExceptions);
+        page.importKeyValuePairsIntoFields(examples.getRows());
     }
 
     @Given("I have written these values: $examples")
-    public void givenIHaveWrittenValues(@Named("examples") ExamplesTable examples) throws Exception {
+    public void givenIHaveWrittenValues(@Named("examples") ExamplesTable examples) {
         Page page = (Page) testScope.get(CURRENT_PAGE);
         testScope.put("examples", examples);
-        Set<Exception> nestedExceptions = page.importNamedValuesIntoFields(examples.getHeaders(), examples.getRows());
-        processNestedExceptions(nestedExceptions);
+        page.importNamedValuesIntoFields(examples.getHeaders(), examples.getRows());
     }
 
     @When("I $action")
@@ -81,22 +76,10 @@ public class CommonSteps {
     }
 
     @Then("there should be $collectionName")
-    public void thenThereShouldBeResults(@Named("collectionName") String collectionName) throws NoSuchFieldException, IllegalAccessException {
+    public void thenThereShouldBeResults(@Named("collectionName") String collectionName) {
         LOG.info("Then there should be {}.", collectionName);
         Collection collection = (Collection) ((Page) testScope.get(CURRENT_PAGE)).getFieldValue(collectionName);
         Assert.assertThat(collection, Matchers.notNullValue());
         Assert.assertThat(collection.size(), Matchers.greaterThan(0));
-    }
-
-    private void processNestedExceptions(Set<Exception> nestedExceptions) throws Exception {
-        if (nestedExceptions.size() > 0) {
-            Exception e = new Exception("Several exceptions found when writing data into fields.");
-            nestedExceptions.forEach(ne -> {
-                Stream<StackTraceElement> a = Arrays.stream(e.getStackTrace());
-                Stream<StackTraceElement> b = Arrays.stream(ne.getStackTrace());
-                e.setStackTrace(Stream.concat(a, b).toArray(StackTraceElement[]::new));
-            });
-            throw e;
-        }
     }
 }

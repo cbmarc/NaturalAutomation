@@ -1,8 +1,9 @@
 package com.naturalautomation.selenium.pages;
 
+import com.naturalautomation.exceptions.NaturalAutomationException;
 import com.naturalautomation.exceptions.NotInPageException;
-import com.naturalautomation.selenium.element.Element;
 import com.naturalautomation.jbehave.WebDriverWrapper;
+import com.naturalautomation.selenium.element.Element;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public abstract class Page {
                 .forEach(f -> setFieldValue(f, random(String.class)));
     }
 
-    public Object getFieldValue(String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    public Object getFieldValue(String fieldName) {
         try {
             Field field = this.getClass().getDeclaredField(fieldName);
             boolean accesible = field.isAccessible();
@@ -50,7 +51,7 @@ public abstract class Page {
             return obj;
         } catch (NoSuchFieldException | IllegalAccessException e) {
             LOG.error("Error when trying to get field value for field: " + fieldName + ".", e);
-            throw e;
+            throw new NaturalAutomationException(e);
         }
     }
 
@@ -72,7 +73,7 @@ public abstract class Page {
         return null;
     }
 
-    public Page navigate() throws NotInPageException {
+    public Page navigate() {
         webDriverWrapper.getWebDriver().get(getURL());
         selectIFrame();
         if (!isInPage()) throw new NotInPageException(this);
@@ -97,37 +98,21 @@ public abstract class Page {
         webDriverWrapper.getWebDriver().switchTo().defaultContent();
     }
 
-    public Set<Exception> importKeyValuePairsIntoFields(Collection<Map<String, String>> rows) {
-        final Set<Exception> nestedExceptions = new HashSet<>();
-        rows.forEach(r -> {
-            try {
-                setFieldValue(r.get(IMPORT_KEY), r.get(IMPORT_VALUE));
-            } catch (NoSuchFieldException e) {
-                nestedExceptions.add(e);
-            }
-        });
-        return nestedExceptions;
+    public void importKeyValuePairsIntoFields(Collection<Map<String, String>> rows) {
+        rows.forEach(r -> setFieldValue(r.get(IMPORT_KEY), r.get(IMPORT_VALUE)));
     }
 
-    public Set<Exception> importNamedValuesIntoFields(Collection<String> headers, Collection<Map<String, String>> rows) {
-        final Set<Exception> nestedExceptions = new HashSet<>();
-        headers.forEach(h -> rows.forEach(r -> {
-            try {
-                setFieldValue(h, r.get(h));
-            } catch (NoSuchFieldException e) {
-                nestedExceptions.add(e);
-            }
-        }));
-        return nestedExceptions;
+    public void importNamedValuesIntoFields(Collection<String> headers, Collection<Map<String, String>> rows) {
+        headers.forEach(h -> rows.forEach(r -> setFieldValue(h, r.get(h))));
     }
 
-    public void setFieldValue(String fieldName, CharSequence value) throws NoSuchFieldException {
+    public void setFieldValue(String fieldName, CharSequence value)  {
         try {
             Field field = this.getClass().getDeclaredField(fieldName);
             setFieldValue(field, value);
         } catch (NoSuchFieldException e) {
             LOG.error("Error when trying to set field value for field: " + fieldName + ".", e);
-            throw e;
+            throw new NaturalAutomationException(e);
         }
     }
 
