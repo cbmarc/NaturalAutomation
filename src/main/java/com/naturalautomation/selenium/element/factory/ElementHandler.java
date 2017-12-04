@@ -1,5 +1,6 @@
 package com.naturalautomation.selenium.element.factory;
 
+import com.naturalautomation.exceptions.ImplementationNotFoundException;
 import com.naturalautomation.selenium.element.Element;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -25,13 +26,14 @@ public class ElementHandler implements InvocationHandler {
      * @param locator       Element locator that finds the element on a page.
      * @param <T>           type of the interface
      */
-    public <T> ElementHandler(Class<T> interfaceType, ElementLocator locator, WebDriver driver) {
+    public <T> ElementHandler(Class<T> interfaceType, ElementLocator locator, WebDriver driver) throws ImplementationNotFoundException {
         this.locator = locator;
         this.driver = driver;
         if (!Element.class.isAssignableFrom(interfaceType)) {
             throw new RuntimeException("interface not assignable to Element.");
         }
-        this.wrappingType = getWrapperClass(interfaceType);
+        this.wrappingType = getWrapperClass(interfaceType)
+                .orElseThrow(() -> new ImplementationNotFoundException(interfaceType));
     }
 
     @Override
