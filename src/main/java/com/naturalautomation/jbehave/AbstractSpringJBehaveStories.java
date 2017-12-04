@@ -22,7 +22,6 @@ import org.jbehave.core.steps.StepMonitor;
 import org.jbehave.core.steps.spring.SpringStepsFactory;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.PageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
@@ -109,7 +108,6 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
 
     private void initiliazeDriver() throws IOException {
         if(this.getClass().isAnnotationPresent(UseWebDriver.class)) {
-            System.out.println("Loading chrome driver");
             Path basePath = Paths.get(DRIVERS_PATH).toAbsolutePath();
             Optional<Path> fileName = Files.list(basePath).filter(p -> p.getFileName().toString().startsWith(DRIVER_NAME)).findFirst();
             fileName.ifPresent(path -> System.setProperty(DRIVER_PROPERTY, basePath + "/" + path.getFileName().toString()));
