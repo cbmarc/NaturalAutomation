@@ -2,6 +2,7 @@ package com.naturalautomation.jbehave;
 
 import com.naturalautomation.annotations.UseWebDriver;
 import com.naturalautomation.exceptions.NaturalAutomationException;
+import com.naturalautomation.selenium.element.factory.ElementFactory;
 import com.naturalautomation.selenium.pages.PageObject;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
@@ -101,7 +102,7 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
         for (String name : applicationContext.getBeanDefinitionNames()) {
             Object bean = applicationContext.getBean(name);
             if (bean.getClass().isAnnotationPresent(PageObject.class)) {
-                PageFactory.initElements(webDriverWrapper.getWebDriver(), bean);
+                ElementFactory.initElements(webDriverWrapper.getWebDriver(), bean);
             }
         }
     }
