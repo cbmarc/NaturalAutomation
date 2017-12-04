@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -50,29 +49,20 @@ public class CommonSteps {
     }
 
     @Given("I have written '$text' in the $field field")
-    public void givenTextInFieldIsWritten(@Named("text") String text, @Named("field") String field) throws NoSuchFieldException {
-        ((Page) testScope.get(CURRENT_PAGE)).writeTextInField(field, text);
+    public void givenTextInFieldIsWritten(@Named("text") String text, @Named("field") String field) throws NoSuchFieldException, IllegalAccessException {
+        ((Page) testScope.get(CURRENT_PAGE)).setFieldValue(field, text);
     }
 
     @Given("I have selected the '$option' option in the $field dropdown")
-    public void givenSelectedOption(@Named("option") String option, @Named("field") String field) throws NoSuchFieldException {
-        ((Page) testScope.get(CURRENT_PAGE)).selectOptionInField(field, option);
+    public void givenSelectedOption(@Named("option") String option, @Named("field") String field) throws NoSuchFieldException, IllegalAccessException {
+        ((Page) testScope.get(CURRENT_PAGE)).setFieldValue(field, option);
     }
 
     @Given("I have populated it with this value map: $examples")
     public void givenAddData(@Named("examples") ExamplesTable examples) throws Exception {
         Page page = (Page) testScope.get(CURRENT_PAGE);
         testScope.put("examples", examples);
-        final Set<Exception> nestedExceptions = new HashSet<>();
-        // TODO: this should be able to handle all components
-        examples.getRows()
-                .forEach(r -> {
-                    try {
-                        page.writeTextInField(r.get("field"), r.get("text"));
-                    } catch (NoSuchFieldException e) {
-                        nestedExceptions.add(e);
-                    }
-                });
+        Set<Exception> nestedExceptions = page.importKeyValuePairsIntoFields(examples.getRows());
         processNestedExceptions(nestedExceptions);
     }
 
@@ -80,17 +70,7 @@ public class CommonSteps {
     public void givenIHaveWrittenValues(@Named("examples") ExamplesTable examples) throws Exception {
         Page page = (Page) testScope.get(CURRENT_PAGE);
         testScope.put("examples", examples);
-        final Set<Exception> nestedExceptions = new HashSet<>();
-        // TODO: this should be able to handle all components
-        examples.getHeaders().forEach(h -> {
-            examples.getRows().forEach(r -> {
-                try {
-                    page.writeTextInField(h, r.get(h));
-                } catch (NoSuchFieldException e) {
-                    nestedExceptions.add(e);
-                }
-            });
-        });
+        Set<Exception> nestedExceptions = page.importNamedValuesIntoFields(examples.getHeaders(), examples.getRows());
         processNestedExceptions(nestedExceptions);
     }
 
