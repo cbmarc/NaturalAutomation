@@ -9,4 +9,6 @@ import org.openqa.selenium.internal.WrapsElement;
  */
 public interface Element extends WebElement, WrapsElement, Locatable {
     void pressEnter();
+
+    void inputValue(CharSequence... value);
 }

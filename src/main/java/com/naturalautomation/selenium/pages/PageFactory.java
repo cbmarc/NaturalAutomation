@@ -27,7 +27,4 @@ public class PageFactory {
         return (Page) namedPage;
     }
 
-    public Set<? extends Named> getPages() {
-        return pages;
-    }
 }

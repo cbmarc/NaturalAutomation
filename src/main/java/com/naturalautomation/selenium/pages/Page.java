@@ -1,10 +1,9 @@
 package com.naturalautomation.selenium.pages;
 
+import com.naturalautomation.exceptions.NaturalAutomationException;
 import com.naturalautomation.exceptions.NotInPageException;
-import com.naturalautomation.selenium.components.html.SelectInput;
-import com.naturalautomation.selenium.element.Element;
 import com.naturalautomation.jbehave.WebDriverWrapper;
-import org.openqa.selenium.Keys;
+import com.naturalautomation.selenium.element.Element;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import java.util.function.BiConsumer;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static io.github.benas.randombeans.api.EnhancedRandom.random;
@@ -25,6 +20,9 @@ import static io.github.benas.randombeans.api.EnhancedRandom.random;
 public abstract class Page {
 
     private static final Logger LOG = LoggerFactory.getLogger(Page.class);
+    private static final String IMPORT_KEY = "key";
+    private static final String IMPORT_VALUE = "value";
+
     @Autowired
     private WebDriverWrapper webDriverWrapper;
 
@@ -39,10 +37,10 @@ public abstract class Page {
     public void fillDefaultData() {
         Stream.of(this.getClass().getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(InputData.class))
-                .forEach(f -> setFieldValue(f, random(String.class), Element::sendKeys));
+                .forEach(f -> setFieldValue(f, random(String.class)));
     }
 
-    public Object getFieldValue(String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    public Object getFieldValue(String fieldName) {
         try {
             Field field = this.getClass().getDeclaredField(fieldName);
             boolean accesible = field.isAccessible();
@@ -53,16 +51,8 @@ public abstract class Page {
             return obj;
         } catch (NoSuchFieldException | IllegalAccessException e) {
             LOG.error("Error when trying to get field value for field: " + fieldName + ".", e);
-            throw e;
+            throw new NaturalAutomationException(e);
         }
-    }
-
-    public void writeTextInField(String fieldName, CharSequence value) throws NoSuchFieldException {
-        this.setFieldValue(fieldName, value, Element::sendKeys);
-    }
-
-    public void selectOptionInField(String fieldName, String value) throws NoSuchFieldException {
-        this.setFieldValue(fieldName, value, (htmlComponent, s) -> ((SelectInput) htmlComponent).chooseOption(s.toString()));
     }
 
     public Page invokeAction(String action, Object... params) {
@@ -83,7 +73,7 @@ public abstract class Page {
         return null;
     }
 
-    public Page navigate() throws NotInPageException {
+    public Page navigate() {
         webDriverWrapper.getWebDriver().get(getURL());
         selectIFrame();
         if (!isInPage()) throw new NotInPageException(this);
@@ -108,22 +98,30 @@ public abstract class Page {
         webDriverWrapper.getWebDriver().switchTo().defaultContent();
     }
 
-    private void setFieldValue(String fieldName, CharSequence value, BiConsumer<Element, CharSequence> consumer) throws NoSuchFieldException {
+    public void importKeyValuePairsIntoFields(Collection<Map<String, String>> rows) {
+        rows.forEach(r -> setFieldValue(r.get(IMPORT_KEY), r.get(IMPORT_VALUE)));
+    }
+
+    public void importNamedValuesIntoFields(Collection<String> headers, Collection<Map<String, String>> rows) {
+        headers.forEach(h -> rows.forEach(r -> setFieldValue(h, r.get(h))));
+    }
+
+    public void setFieldValue(String fieldName, CharSequence value)  {
         try {
             Field field = this.getClass().getDeclaredField(fieldName);
-            setFieldValue(field, value, consumer);
+            setFieldValue(field, value);
         } catch (NoSuchFieldException e) {
             LOG.error("Error when trying to set field value for field: " + fieldName + ".", e);
-            throw e;
+            throw new NaturalAutomationException(e);
         }
     }
 
-    private void setFieldValue(Field f, CharSequence value, BiConsumer<Element, CharSequence> consumer) {
+    private void setFieldValue(Field f, CharSequence value) {
         try {
             f.setAccessible(true);
             Element element = (Element) f.get(this);
             element.click();
-            consumer.accept(element, value);
+            element.inputValue(value);
             f.setAccessible(false);
         } catch (IllegalAccessException e) {
             LOG.warn("Error setting default random data.", e);

@@ -1,5 +1,6 @@
 package com.naturalautomation.selenium.element.factory;
 
+import com.naturalautomation.exceptions.ImplementationNotFoundException;
 import com.naturalautomation.selenium.element.DefaultElement;
 import com.naturalautomation.selenium.element.Element;
 import org.openqa.selenium.WebDriver;
@@ -12,6 +13,8 @@ import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.pagefactory.ElementLocator;
 import org.openqa.selenium.support.pagefactory.ElementLocatorFactory;
 import org.openqa.selenium.support.pagefactory.FieldDecorator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.*;
 import java.util.List;
@@ -21,6 +24,8 @@ import java.util.List;
  * It is designed to support and return concrete implementations of wrappers for a variety of common html elements.
  */
 public class ElementDecorator implements FieldDecorator {
+
+    private final static Logger LOG = LoggerFactory.getLogger(ElementDecorator.class);
     /**
      * factory to use when generating ElementLocator.
      */
@@ -90,21 +95,33 @@ public class ElementDecorator implements FieldDecorator {
     }
 
     private <T> T proxyForLocator(ClassLoader loader, Class<T> interfaceType, ElementLocator locator) {
-        InvocationHandler handler = new ElementHandler(interfaceType, locator, driver);
+        try {
+            InvocationHandler handler = new ElementHandler(interfaceType, locator, driver);
 
-        T proxy;
-        proxy = interfaceType.cast(Proxy.newProxyInstance(
-                loader, new Class[]{interfaceType, WebElement.class, WrapsElement.class, Locatable.class}, handler));
-        return proxy;
+            T proxy;
+            proxy = interfaceType.cast(Proxy.newProxyInstance(
+                    loader, new Class[]{interfaceType, WebElement.class, WrapsElement.class, Locatable.class}, handler));
+            return proxy;
+        } catch (ImplementationNotFoundException e) {
+            LOG.error(e.getMessage(), e);
+            // Have to return null as call, as caller class is legacy and not under our domain
+            return null;
+        }
     }
 
     @SuppressWarnings("unchecked")
     private <T> List<T> proxyForListLocator(ClassLoader loader, Class<T> interfaceType, ElementLocator locator) {
-        InvocationHandler handler = new ElementListHandler(interfaceType, locator, driver);
+        try {
+            InvocationHandler handler = new ElementListHandler(interfaceType, locator, driver);
 
-        List<T> proxy;
-        proxy = (List<T>) Proxy.newProxyInstance(
-                loader, new Class[]{List.class}, handler);
-        return proxy;
+            List<T> proxy;
+            proxy = (List<T>) Proxy.newProxyInstance(
+                    loader, new Class[]{List.class}, handler);
+            return proxy;
+        } catch (ImplementationNotFoundException e) {
+            LOG.error(e.getMessage(), e);
+            // Have to return null as call, as caller class is legacy and not under our domain
+            return null;
+        }
     }
 }
