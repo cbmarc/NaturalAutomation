@@ -2,6 +2,7 @@ package com.naturalautomation.selenium.pages;
 
 import com.naturalautomation.exceptions.NotInPageException;
 import com.naturalautomation.selenium.element.Element;
+import com.naturalautomation.jbehave.WebDriverWrapper;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,19 +21,16 @@ public abstract class Page {
     private static final Logger LOG = LoggerFactory.getLogger(Page.class);
     private static final String IMPORT_KEY = "key";
     private static final String IMPORT_VALUE = "value";
-    private WebDriver driver;
 
     @Autowired
-    public void setDriver(WebDriver driver) {
-        this.driver = driver;
-    }
+    private WebDriverWrapper webDriverWrapper;
 
     public WebDriver getDriver() {
-        return driver;
+        return webDriverWrapper.getWebDriver();
     }
 
     public String getTitle() {
-        return driver.getTitle();
+        return webDriverWrapper.getWebDriver().getTitle();
     }
 
     public void fillDefaultData() {
@@ -75,7 +73,7 @@ public abstract class Page {
     }
 
     public Page navigate() throws NotInPageException {
-        driver.get(getURL());
+        webDriverWrapper.getWebDriver().get(getURL());
         selectIFrame();
         if (!isInPage()) throw new NotInPageException(this);
         return this;
@@ -86,7 +84,7 @@ public abstract class Page {
      * A page can override this function to get its url instead.
      */
     protected String getURL() {
-        return driver.getCurrentUrl();
+        return webDriverWrapper.getWebDriver().getCurrentUrl();
     }
 
     protected abstract boolean isInPage();
@@ -96,7 +94,7 @@ public abstract class Page {
      * Defaults to no iframe
      */
     protected void selectIFrame() {
-        driver.switchTo().defaultContent();
+        webDriverWrapper.getWebDriver().switchTo().defaultContent();
     }
 
     public Set<Exception> importKeyValuePairsIntoFields(Collection<Map<String, String>> rows) {
