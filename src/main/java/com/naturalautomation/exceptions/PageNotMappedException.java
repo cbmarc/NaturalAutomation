@@ -1,6 +1,6 @@
 package com.naturalautomation.exceptions;
 
-public class PageNotMappedException extends Exception {
+public class PageNotMappedException extends NaturalAutomationException {
 
     public PageNotMappedException() {
     }
