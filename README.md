@@ -26,7 +26,7 @@ This will compile the project and download the web driver for your operating sys
 
 The chromedriver will be downloaded in your target under target/driver/. Now you can either run ```mvn test -P integration-test``` or run the 
 ```
-com.naturalautomation.JBehaveStoriesIT
+com.com.naturalautomation.JBehaveStoriesIT
 ```
 class under test scope.
 ## Goal ##
