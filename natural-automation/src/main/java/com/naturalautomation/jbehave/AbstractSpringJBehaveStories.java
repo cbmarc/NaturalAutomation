@@ -84,7 +84,7 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
         try {
             prepareWebDriver();
         } catch (IOException e) {
-            new NaturalAutomationException("Error creating selenium driver",e);
+            throw new NaturalAutomationException("Error creating selenium driver",e);
         }
         return new SpringStepsFactory(configuration(), applicationContext);
     }
