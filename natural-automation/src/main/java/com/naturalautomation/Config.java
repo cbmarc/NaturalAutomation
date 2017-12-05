@@ -10,10 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 import java.io.IOException;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.com.naturalautomation")
+@ComponentScan(basePackages = "com.naturalautomation")
 public class Config {
-
-
 
     public static void main(String[] args) {
         SpringApplication.run(Config.class, args);
