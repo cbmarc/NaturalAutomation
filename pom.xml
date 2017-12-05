@@ -4,9 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.fullstackmarc.selenium</groupId>
-    <artifactId>NaturalAutomation</artifactId>
+    <groupId>com.fullstackmarc</groupId>
+    <artifactId>natural-automation</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -14,6 +15,11 @@
         <version>1.5.8.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
+    <modules>
+        <module>NaturalAutomationFwk</module>
+        <module>NaturalAutomationExamples</module>
+    </modules>
 
     <properties>
         <slf4j.version>1.7.25</slf4j.version>

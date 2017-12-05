@@ -35,8 +35,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @org.springframework.context.annotation.Configuration
@@ -123,7 +121,7 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
         if (storyProperty != null && !storyProperty.isEmpty()) {
             stories = storyProperty + ".story";
         }
-        return finder.findPaths(codeLocationFromClass(this.getClass()).getFile(), Arrays.asList("**/" + stories), Arrays.asList(""));
+        return finder.findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(), Arrays.asList("**/" + stories), Arrays.asList(""));
     }
 
     private static final String DRIVER_NAME = "chromedriver";

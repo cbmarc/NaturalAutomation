@@ -4,6 +4,7 @@ import com.naturalautomation.exceptions.NaturalAutomationException;
 import com.naturalautomation.exceptions.NotInPageException;
 import com.naturalautomation.jbehave.WebDriverWrapper;
 import com.naturalautomation.selenium.element.Element;
+import io.github.benas.randombeans.api.EnhancedRandom;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Stream;
-
-import static io.github.benas.randombeans.api.EnhancedRandom.random;
 
 public abstract class Page {
 
@@ -37,7 +36,7 @@ public abstract class Page {
     public void fillDefaultData() {
         Stream.of(this.getClass().getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(InputData.class))
-                .forEach(f -> setFieldValue(f, random(String.class)));
+                .forEach(f -> setFieldValue(f, EnhancedRandom.random(String.class)));
     }
 
     public Object getFieldValue(String fieldName) {
