@@ -1,8 +1,6 @@
 package com.naturalautomation.jbehave;
 
 import com.naturalautomation.annotations.Steps;
-import com.naturalautomation.exceptions.NotInPageException;
-import com.naturalautomation.exceptions.PageNotMappedException;
 import com.naturalautomation.selenium.TestScope;
 import com.naturalautomation.selenium.pages.Page;
 import com.naturalautomation.selenium.pages.PageFactory;
@@ -35,7 +33,7 @@ public class CommonSteps {
     }
 
     @Given("I am in the $page page")
-    public void givenUserInPage(@Named("page") String page) throws PageNotMappedException, NotInPageException {
+    public void givenUserInPage(@Named("page") String page) {
         LOG.info("Given the user is in the {} page.", page);
         testScope.put(CURRENT_PAGE, pageFactory.getPage(page).navigate());
     }
