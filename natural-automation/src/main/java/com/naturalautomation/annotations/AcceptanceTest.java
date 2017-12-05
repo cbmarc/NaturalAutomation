@@ -1,4 +1,4 @@
-package com.naturalautomation.jbehave;
+package com.naturalautomation.annotations;
 
 import com.naturalautomation.selenium.SeleniumTestExecutionListener;
 import org.springframework.test.annotation.DirtiesContext;

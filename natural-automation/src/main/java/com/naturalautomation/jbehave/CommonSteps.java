@@ -1,5 +1,6 @@
 package com.naturalautomation.jbehave;
 
+import com.naturalautomation.annotations.Steps;
 import com.naturalautomation.exceptions.NotInPageException;
 import com.naturalautomation.exceptions.PageNotMappedException;
 import com.naturalautomation.selenium.TestScope;

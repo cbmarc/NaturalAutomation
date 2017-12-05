@@ -1,5 +1,6 @@
 package com.naturalautomation.selenium.pages;
 
+import com.naturalautomation.annotations.InputData;
 import com.naturalautomation.exceptions.NaturalAutomationException;
 import com.naturalautomation.exceptions.NotInPageException;
 import com.naturalautomation.jbehave.WebDriverWrapper;

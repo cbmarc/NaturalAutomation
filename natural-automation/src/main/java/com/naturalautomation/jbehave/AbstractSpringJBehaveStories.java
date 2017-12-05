@@ -1,9 +1,9 @@
 package com.naturalautomation.jbehave;
 
+import com.naturalautomation.annotations.PageObject;
 import com.naturalautomation.annotations.UseWebDriver;
 import com.naturalautomation.exceptions.NaturalAutomationException;
 import com.naturalautomation.selenium.element.factory.ElementFactory;
-import com.naturalautomation.selenium.pages.PageObject;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
 import org.jbehave.core.configuration.spring.SpringStoryControls;

@@ -1,4 +1,4 @@
-package com.naturalautomation.jbehave;
+package com.naturalautomation.annotations;
 
 import org.springframework.stereotype.Component;
 

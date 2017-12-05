@@ -1,10 +1,10 @@
 package com.naturalautomation.selenium.pages.google;
 
+import com.naturalautomation.annotations.InputData;
+import com.naturalautomation.annotations.PageObject;
 import com.naturalautomation.selenium.element.Element;
-import com.naturalautomation.selenium.pages.InputData;
 import com.naturalautomation.selenium.pages.Named;
 import com.naturalautomation.selenium.pages.Page;
-import com.naturalautomation.selenium.pages.PageObject;
 import org.openqa.selenium.support.FindBy;
 import org.springframework.beans.factory.annotation.Autowired;
 
