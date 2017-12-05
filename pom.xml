@@ -37,32 +37,6 @@
         <reflections.version>0.9.11</reflections.version>
     </properties>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.jbehave</groupId>
-                    <artifactId>jbehave-maven-plugin</artifactId>
-                    <version>${jbehave.version}</version>
-                    <executions>
-                        <execution>
-                            <id>unpack-view-resources</id>
-                            <phase>generate-resources</phase>
-                            <goals>
-                                <goal>unpack-view-resources</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+
+
 </project>
