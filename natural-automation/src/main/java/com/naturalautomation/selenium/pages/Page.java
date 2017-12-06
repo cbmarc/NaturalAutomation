@@ -14,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public abstract class Page {
@@ -56,8 +59,8 @@ public abstract class Page {
     }
 
     public Page invokeAction(String action, Object... params) {
-        List<Method> methods = Arrays.asList(this.getClass().getDeclaredMethods());
-        Optional<Method> optMethod = methods.stream()
+        Stream<Method> methods = Arrays.stream(this.getClass().getDeclaredMethods());
+        Optional<Method> optMethod = methods
                 .filter(a -> a.getName().equals(action))
                 .filter(a -> a.getParameterCount() == params.length)
                 .findFirst();
@@ -124,7 +127,8 @@ public abstract class Page {
             element.inputValue(value);
             f.setAccessible(false);
         } catch (IllegalAccessException e) {
-            LOG.warn("Error setting default random data.", e);
+            LOG.error("Error setting default random data.", e);
+            throw new NaturalAutomationException("Error setting default random data.", e);
         }
     }
 
