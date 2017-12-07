@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 public abstract class Page {
@@ -60,20 +59,16 @@ public abstract class Page {
 
     public Page invokeAction(String action, Object... params) {
         Stream<Method> methods = Arrays.stream(this.getClass().getDeclaredMethods());
-        Optional<Method> optMethod = methods
+        Method method = methods
                 .filter(a -> a.getName().equals(action))
                 .filter(a -> a.getParameterCount() == params.length)
-                .findFirst();
-        if (optMethod.isPresent()) {
-            try {
-                return (Page) optMethod.get().invoke(this, params);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                LOG.error("Error while executing action " + action + " with params size " + params.length, e);
-            }
-        } else {
-            LOG.error("Action {} does not exist.", action);
+                .findFirst()
+                .orElseThrow(() -> new NaturalAutomationException("Action not found:" + action));
+        try {
+            return (Page) method.invoke(this, params);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new NaturalAutomationException("Error while executing action " + action + " with params size " + params.length, e);
         }
-        return null;
     }
 
     public Page navigate() {
