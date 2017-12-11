@@ -68,10 +68,15 @@ public class CommonSteps {
         page.importNamedValuesIntoFields(examples.getHeaders(), examples.getRows());
     }
 
+    @Given("I did a $action")
+    public void givenIDidAction(@Named("action") String action) {
+        testScope.put(CURRENT_PAGE, runAction(action));
+    }
+
     @When("I $action")
     public void whenIDoAnAction(@Named("action") String action) {
         LOG.info("When the user does a {}.", action);
-        testScope.put(CURRENT_PAGE, ((Page) testScope.get(CURRENT_PAGE)).invokeAction(action));
+        testScope.put(CURRENT_PAGE, runAction(action));
     }
 
     @Then("there should be $collectionName")
@@ -80,5 +85,9 @@ public class CommonSteps {
         Collection collection = (Collection) ((Page) testScope.get(CURRENT_PAGE)).getFieldValue(collectionName);
         Assert.assertThat(collection, Matchers.notNullValue());
         Assert.assertThat(collection.size(), Matchers.greaterThan(0));
+    }
+
+    private Page runAction(String action) {
+        return ((Page) testScope.get(CURRENT_PAGE)).invokeAction(action);
     }
 }

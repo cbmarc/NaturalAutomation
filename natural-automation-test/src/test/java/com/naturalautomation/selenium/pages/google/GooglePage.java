@@ -14,7 +14,7 @@ public class GooglePage extends Page implements Named {
     private static final String PAGE_NAME = "Google";
     private static final String PAGE_URL = "http://www.google.es";
 
-    private final GoogleResultsPage googleResultsPage;
+    private final ResultsPage googleResultsPage;
 
     @InputData
     @FindBy(id = "lst-ib")
@@ -24,7 +24,7 @@ public class GooglePage extends Page implements Named {
     private Element searchButton;
 
     @Autowired
-    public GooglePage(GoogleResultsPage googleResultsPage) {
+    public GooglePage(ResultsPage googleResultsPage) {
         this.googleResultsPage = googleResultsPage;
     }
 
@@ -33,12 +33,12 @@ public class GooglePage extends Page implements Named {
         return PAGE_NAME;
     }
 
-    public GoogleResultsPage search() {
+    public ResultsPage search() {
         searchBox.pressEnter();
         return googleResultsPage;
     }
 
-    public GoogleResultsPage search(String text) {
+    public ResultsPage search(String text) {
         searchBox.sendKeys(text);
         return search();
     }
