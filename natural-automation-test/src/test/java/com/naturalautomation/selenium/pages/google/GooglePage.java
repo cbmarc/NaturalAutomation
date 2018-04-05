@@ -18,10 +18,10 @@ public class GooglePage extends Page implements Named {
 
     @InputData
     @FindBy(id = "lst-ib")
-    private Element searchBox;
+    public Element searchBox;
 
     @FindBy(name = "btnK")
-    private Element searchButton;
+    public Element searchButton;
 
     @Autowired
     public GooglePage(ResultsPage googleResultsPage) {

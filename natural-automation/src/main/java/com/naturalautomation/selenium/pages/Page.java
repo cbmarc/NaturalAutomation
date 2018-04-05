@@ -7,6 +7,8 @@ import com.naturalautomation.jbehave.WebDriverWrapper;
 import com.naturalautomation.selenium.element.Element;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +118,7 @@ public abstract class Page {
 
     private void setFieldValue(Field f, CharSequence value) {
         try {
+            new WebDriverWait(webDriverWrapper.getWebDriver(),10000L).until(ExpectedConditions.visibilityOf((Element)f.get(this)));
             f.setAccessible(true);
             Element element = (Element) f.get(this);
             element.click();

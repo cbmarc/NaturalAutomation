@@ -19,6 +19,7 @@
     <modules>
         <module>natural-automation</module>
         <module>natural-automation-test</module>
+        <module>natural-automation-starter</module>
     </modules>
 
     <properties>

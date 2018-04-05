@@ -46,6 +46,7 @@ public class CommonSteps {
 
     @Given("I have written '$text' in the $field field")
     public void givenTextInFieldIsWritten(@Named("text") String text, @Named("field") String field) {
+
         ((Page) testScope.get(CURRENT_PAGE)).setFieldValue(field, text);
     }
 
@@ -85,6 +86,15 @@ public class CommonSteps {
         Collection collection = (Collection) ((Page) testScope.get(CURRENT_PAGE)).getFieldValue(collectionName);
         Assert.assertThat(collection, Matchers.notNullValue());
         Assert.assertThat(collection.size(), Matchers.greaterThan(0));
+    }
+
+    @Then("just for show wait $seconds seconds")
+    public void justForDemoWait(Integer seconds){
+        try {
+            Thread.sleep(seconds*1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private Page runAction(String action) {

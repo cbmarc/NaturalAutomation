@@ -6,11 +6,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 
-@SpringBootApplication
-@ComponentScan(basePackages = "com.naturalautomation")
+@Configuration
+@ComponentScan("com.naturalautomation")
 public class Config {
 
     public static void main(String[] args) {
