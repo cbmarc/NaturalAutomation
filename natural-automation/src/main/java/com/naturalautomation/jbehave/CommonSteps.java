@@ -44,9 +44,13 @@ public class CommonSteps {
         ((Page) testScope.get(CURRENT_PAGE)).fillDefaultData();
     }
 
+    @Given("I have clicked on $element")
+    public void givenIHaveClickedOn(@Named("element") String element) {
+        ((Page) testScope.get(CURRENT_PAGE)).clickOnElement(element);
+    }
+
     @Given("I have written '$text' in the $field field")
     public void givenTextInFieldIsWritten(@Named("text") String text, @Named("field") String field) {
-
         ((Page) testScope.get(CURRENT_PAGE)).setFieldValue(field, text);
     }
 

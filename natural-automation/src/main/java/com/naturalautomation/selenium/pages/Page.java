@@ -106,6 +106,21 @@ public abstract class Page {
         headers.forEach(h -> rows.forEach(r -> setFieldValue(h, r.get(h))));
     }
 
+    public void clickOnElement(String fieldName) {
+        try {
+            Field field = this.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            new WebDriverWait(webDriverWrapper.getWebDriver(),10000L)
+                    .until(ExpectedConditions.visibilityOf((Element)field.get(this)));
+            Element element = (Element) field.get(this);
+            element.click();
+            field.setAccessible(false);
+        } catch (Exception e) {
+            LOG.error("Error when trying to set field value for field: " + fieldName + ".", e);
+            throw new NaturalAutomationException(e);
+        }
+    }
+
     public void setFieldValue(String fieldName, CharSequence value)  {
         try {
             Field field = this.getClass().getDeclaredField(fieldName);
