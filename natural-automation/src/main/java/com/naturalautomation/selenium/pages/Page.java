@@ -118,15 +118,15 @@ public abstract class Page {
 
     private void setFieldValue(Field f, CharSequence value) {
         try {
-            new WebDriverWait(webDriverWrapper.getWebDriver(),10000L).until(ExpectedConditions.visibilityOf((Element)f.get(this)));
             f.setAccessible(true);
+            new WebDriverWait(webDriverWrapper.getWebDriver(),10000L).until(ExpectedConditions.visibilityOf((Element)f.get(this)));
             Element element = (Element) f.get(this);
             element.click();
             element.inputValue(value);
             f.setAccessible(false);
         } catch (IllegalAccessException e) {
-            LOG.error("Error setting default random data.", e);
-            throw new NaturalAutomationException("Error setting default random data.", e);
+            LOG.error("Error setting data to field " + f.getName(), e);
+            throw new NaturalAutomationException("Error setting data to field " + f.getName(), e);
         }
     }
 
