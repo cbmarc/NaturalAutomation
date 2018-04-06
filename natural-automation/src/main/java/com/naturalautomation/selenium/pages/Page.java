@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public abstract class Page {
@@ -48,7 +49,7 @@ public abstract class Page {
 
     public Object getFieldValue(String fieldName) {
         try {
-            Field field = this.getClass().getDeclaredField(fieldName);
+            Field field = getField(fieldName);
             boolean accesible = field.isAccessible();
             field.setAccessible(true);
             Object obj = field.get(this);
@@ -117,7 +118,7 @@ public abstract class Page {
 
     public void setFieldValue(String fieldName, CharSequence value)  {
         try {
-            Field field = this.getClass().getDeclaredField(fieldName);
+            Field field = getField(fieldName);
             clickAndConsume(field,(f -> f.inputValue(value)));
         } catch (NoSuchFieldException e) {
             LOG.error("Error when trying to set field value for field: " + fieldName + ".", e);
@@ -127,7 +128,7 @@ public abstract class Page {
 
     public void click(String fieldName){
         try {
-            Field field = this.getClass().getDeclaredField(fieldName);
+            Field field = getField(fieldName);
             clickAndConsume(field,null);
         } catch (NoSuchFieldException e) {
             LOG.error("Error when trying click a field: " + fieldName + ".", e);
@@ -135,11 +136,15 @@ public abstract class Page {
         }
     }
 
+    private Field getField(String fieldName) throws NoSuchFieldException {
+        return this.getClass().getDeclaredField(fieldName);
+    }
+
     private void clickAndConsume(Field f,Consumer<Element> consumer) {
         try {
             f.setAccessible(true);
-            new WebDriverWait(webDriverWrapper.getWebDriver(),WAIT_TIMEOUT).until(ExpectedConditions.visibilityOf((Element)f.get(this)));
             Element element = (Element) f.get(this);
+            waitUntilVisible(element);
             element.click();
             if(consumer != null) {
                 consumer.accept(element);
@@ -151,4 +156,33 @@ public abstract class Page {
         }
     }
 
+    private Boolean verifyElement(Field f,Function<Element,Boolean> function) {
+        Boolean result = false;
+        try {
+            f.setAccessible(true);
+            Element element = (Element) f.get(this);
+            waitUntilVisible(element);
+            element.click();
+
+            if(function != null) {
+                result = function.apply(element);
+            }
+            f.setAccessible(false);
+            return result;
+        } catch (IllegalAccessException e) {
+            LOG.error("Error clicking and consuming the field " + f.getName(), e);
+            throw new NaturalAutomationException("Error clicking and consuming the field " + f.getName(), e);
+        }
+    }
+
+
+    public boolean validateIsVisible(String fieldName) {
+        try {
+            Field field = getField(fieldName);
+            return verifyElement(field,element -> element.isDisplayed());
+        } catch (NoSuchFieldException e) {
+            LOG.error("Error retrieving the element " + fieldName, e);
+            return false;
+        }
+    }
 }
