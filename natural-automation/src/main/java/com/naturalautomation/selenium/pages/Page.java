@@ -140,8 +140,8 @@ public abstract class Page {
     private void clickAndConsume(Field f,Consumer<Element> consumer) {
         try {
             f.setAccessible(true);
-            new WebDriverWait(webDriverWrapper.getWebDriver(),WAIT_TIMEOUT).until(ExpectedConditions.visibilityOf((Element)f.get(this)));
             Element element = (Element) f.get(this);
+            waitUntilVisible(element);
             element.click();
             if(consumer != null) {
                 consumer.accept(element);
