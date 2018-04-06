@@ -37,6 +37,9 @@ public abstract class Page {
     @Autowired
     private WebDriverWrapper webDriverWrapper;
 
+    @Autowired
+    protected PageFactory pageFactory;
+
     protected WebDriver getDriver() {
         return webDriverWrapper.getWebDriver();
     }

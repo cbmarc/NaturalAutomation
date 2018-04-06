@@ -1,5 +1,7 @@
 package com.naturalautomation.selenium.pages;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -12,21 +14,24 @@ import com.naturalautomation.exceptions.PageNotMappedException;
 @Component
 public class PageFactory {
 
+    private Map<String,Class<? extends Page>> map = new HashMap();
+
     @Autowired
     private ApplicationContext applicationContext;
 
-    public <T extends Page & Named> PageFactory(Set<T> pages) {
-        this.pages = pages;
+
+
+    public void register(String name, Class<? extends Page> clazz){
+        map.put(name,clazz);
     }
 
     public Page getPage(String name) throws PageNotMappedException {
-        Optional<? extends Named> namedPage = pages.stream().filter(p -> p.getName().equals(name)).findFirst();
-
-        return (Page) namedPage
-                .orElseThrow(() ->
-                        new PageNotMappedException(
-                                String.format("Page %s is not mapped. Check if a page extending the " +
-                                        "'Page' class and implementing the 'Named' interface exists.", name)));
+        if(!map.containsKey(name)){
+            new PageNotMappedException(
+                    String.format("Page %s is not mapped. Check if a page extending the " +
+                            "'Page' class and implementing the 'Named' interface exists.", name));
+        }
+        return applicationContext.getBean(map.get(name));
     }
 
 }
