@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.openqa.selenium.WebDriver;
@@ -52,7 +53,7 @@ public abstract class Page {
 
     public Element getFieldValue(String fieldName) {
         try {
-            Field field = this.getClass().getDeclaredField(fieldName);
+            Field field = getField(fieldName);
             boolean accesible = field.isAccessible();
             field.setAccessible(true);
             Element element = (Element) field.get(this);
@@ -129,10 +130,43 @@ public abstract class Page {
     }
 
     private void clickAndConsume(Element element, Consumer<Element> consumer) {
-        element.click();
-        if(consumer != null) {
-            consumer.accept(element);
+		element.click();
+		if (consumer != null) {
+			consumer.accept(element);
+		}
+	}
+
+    private Field getField(String fieldName) throws NoSuchFieldException {
+        return this.getClass().getDeclaredField(fieldName);
+    }
+
+    private Boolean verifyElement(Field f,Function<Element,Boolean> function) {
+        Boolean result = false;
+        try {
+            f.setAccessible(true);
+            Element element = (Element) f.get(this);
+            waitUntilVisible(element);
+            element.click();
+
+            if(function != null) {
+                result = function.apply(element);
+            }
+            f.setAccessible(false);
+            return result;
+        } catch (IllegalAccessException e) {
+            LOG.error("Error clicking and consuming the field " + f.getName(), e);
+            throw new NaturalAutomationException("Error clicking and consuming the field " + f.getName(), e);
         }
     }
 
+
+    public boolean validateIsVisible(String fieldName) {
+        try {
+            Field field = getField(fieldName);
+            return verifyElement(field,element -> element.isDisplayed());
+        } catch (NoSuchFieldException e) {
+            LOG.error("Error retrieving the element " + fieldName, e);
+            return false;
+        }
+    }
 }

@@ -93,9 +93,9 @@ public class CommonSteps {
         testScope.put(CURRENT_PAGE, runAction(action));
     }
 
-    @When("I click on $element")
-    public void clickElement(String element){
-        LOG.info("When I click on {}",element);
+    @When("the $element is clicked")
+    public void clickElement(@Named("element") String element){
+        LOG.info("When the element {} is clicked",element);
         Page page = (Page) testScope.get(CURRENT_PAGE);
         page.click(element);
     }
@@ -106,6 +106,14 @@ public class CommonSteps {
         Collection collection = (Collection) ((Page) testScope.get(CURRENT_PAGE)).getFieldValue(collectionName);
         Assert.assertThat(collection, Matchers.notNullValue());
         Assert.assertThat(collection.size(), Matchers.greaterThan(0));
+    }
+
+
+    @Then("The element $element is visible")
+    public void isVisible(@Named("element") String element){
+        LOG.info("Then the element {} is visible.", element);
+        Page page = (Page) testScope.get(CURRENT_PAGE);
+        assert(page.validateIsVisible(element));
     }
 
     @Then("just for show wait $seconds seconds")
