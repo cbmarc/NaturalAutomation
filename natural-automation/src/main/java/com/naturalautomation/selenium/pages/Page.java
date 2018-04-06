@@ -26,11 +26,12 @@ public abstract class Page {
     private static final Logger LOG = LoggerFactory.getLogger(Page.class);
     private static final String IMPORT_KEY = "key";
     private static final String IMPORT_VALUE = "value";
+    private static final long WAIT_TIMEOUT = 10L;
 
     @Autowired
     private WebDriverWrapper webDriverWrapper;
 
-    public WebDriver getDriver() {
+    protected WebDriver getDriver() {
         return webDriverWrapper.getWebDriver();
     }
 
@@ -110,7 +111,7 @@ public abstract class Page {
         try {
             Field field = this.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
-            new WebDriverWait(webDriverWrapper.getWebDriver(),10000L)
+            new WebDriverWait(getDriver(), WAIT_TIMEOUT)
                     .until(ExpectedConditions.visibilityOf((Element)field.get(this)));
             Element element = (Element) field.get(this);
             element.click();
@@ -119,6 +120,11 @@ public abstract class Page {
             LOG.error("Error when trying to set field value for field: " + fieldName + ".", e);
             throw new NaturalAutomationException(e);
         }
+    }
+
+    public void waitUntilVisible(Element element) {
+        new WebDriverWait(getDriver(), WAIT_TIMEOUT)
+                .until(ExpectedConditions.visibilityOf(element));
     }
 
     public void setFieldValue(String fieldName, CharSequence value)  {
