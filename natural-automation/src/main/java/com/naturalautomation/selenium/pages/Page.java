@@ -46,7 +46,8 @@ public abstract class Page {
     public void fillDefaultData() {
         Stream.of(this.getClass().getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(InputData.class))
-                .forEach(f -> clickAndConsume(f, e -> e.inputValue(EnhancedRandom.random(String.class))));
+                .map(f -> getFieldValue(f.getName()))
+                .forEach(element -> clickAndConsume(element, e -> e.inputValue(EnhancedRandom.random(String.class))));
     }
 
     public Element getFieldValue(String fieldName) {
@@ -118,38 +119,19 @@ public abstract class Page {
     }
 
     public void setFieldValue(String fieldName, CharSequence value)  {
-        try {
-            Field field = this.getClass().getDeclaredField(fieldName);
-            clickAndConsume(field,(f -> f.inputValue(value)));
-        } catch (NoSuchFieldException e) {
-            LOG.error("Error when trying to set field value for field: " + fieldName + ".", e);
-            throw new NaturalAutomationException(e);
-        }
+        Element element = getFieldValue(fieldName);
+        clickAndConsume(element, (f -> f.inputValue(value)));
     }
 
     public void click(String fieldName){
-        try {
-            Field field = this.getClass().getDeclaredField(fieldName);
-            clickAndConsume(field,null);
-        } catch (NoSuchFieldException e) {
-            LOG.error("Error when trying click a field: " + fieldName + ".", e);
-            throw new NaturalAutomationException(e);
-        }
+        Element element = getFieldValue(fieldName);
+        clickAndConsume(element,null);
     }
 
-    private void clickAndConsume(Field f,Consumer<Element> consumer) {
-        try {
-            f.setAccessible(true);
-            Element element = (Element) f.get(this);
-            waitUntilVisible(element);
-            element.click();
-            if(consumer != null) {
-                consumer.accept(element);
-            }
-            f.setAccessible(false);
-        } catch (IllegalAccessException e) {
-            LOG.error("Error clicking and consuming the field " + f.getName(), e);
-            throw new NaturalAutomationException("Error clicking and consuming the field " + f.getName(), e);
+    private void clickAndConsume(Element element, Consumer<Element> consumer) {
+        element.click();
+        if(consumer != null) {
+            consumer.accept(element);
         }
     }
 

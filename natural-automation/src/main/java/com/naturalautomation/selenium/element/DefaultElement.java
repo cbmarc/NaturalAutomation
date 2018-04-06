@@ -46,6 +46,7 @@ public class DefaultElement implements Element {
 
     @Override
     public void inputValue(CharSequence... value) {
+        this.click();
         this.sendKeys(value);
     }
 
