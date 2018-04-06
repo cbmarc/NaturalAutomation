@@ -1,18 +1,20 @@
 package com.naturalautomation.selenium.pages;
 
-import com.naturalautomation.exceptions.PageNotMappedException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.util.Optional;
 import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+
+import com.naturalautomation.exceptions.PageNotMappedException;
 
 @Component
 public class PageFactory {
 
-    private final Set<? extends Named> pages;
-
     @Autowired
+    private ApplicationContext applicationContext;
+
     public <T extends Page & Named> PageFactory(Set<T> pages) {
         this.pages = pages;
     }
