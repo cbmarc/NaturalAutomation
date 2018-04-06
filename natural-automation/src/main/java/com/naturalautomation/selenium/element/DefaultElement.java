@@ -1,11 +1,19 @@
 package com.naturalautomation.selenium.element;
 
-import org.openqa.selenium.*;
+import java.util.Arrays;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
-
-import java.util.List;
 
 public class DefaultElement implements Element {
 
@@ -47,7 +55,12 @@ public class DefaultElement implements Element {
     @Override
     public void inputValue(CharSequence... value) {
         this.click();
-        this.sendKeys(value);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < this.getText().length(); i++) {
+            stringBuilder.append(Keys.BACK_SPACE);
+        }
+        Arrays.stream(value).forEach(stringBuilder::append);
+        this.sendKeys(stringBuilder.toString());
     }
 
     @Override

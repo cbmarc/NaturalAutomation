@@ -23,6 +23,7 @@ import com.naturalautomation.exceptions.NaturalAutomationException;
 import com.naturalautomation.exceptions.NotInPageException;
 import com.naturalautomation.jbehave.WebDriverWrapper;
 import com.naturalautomation.selenium.element.Element;
+import com.naturalautomation.selenium.element.ui.TableElement;
 
 import io.github.benas.randombeans.api.EnhancedRandom;
 
@@ -47,11 +48,11 @@ public abstract class Page {
     public void fillDefaultData() {
         Stream.of(this.getClass().getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(InputData.class))
-                .map(f -> getFieldValue(f.getName()))
+                .map(f -> getFieldInstance(f.getName()))
                 .forEach(element -> clickAndConsume(element, e -> e.inputValue(EnhancedRandom.random(String.class))));
     }
 
-    public Element getFieldValue(String fieldName) {
+    public Element getFieldInstance(String fieldName) {
         try {
             Field field = getField(fieldName);
             boolean accesible = field.isAccessible();
@@ -120,12 +121,12 @@ public abstract class Page {
     }
 
     public void setFieldValue(String fieldName, CharSequence value)  {
-        Element element = getFieldValue(fieldName);
+        Element element = getFieldInstance(fieldName);
         clickAndConsume(element, (f -> f.inputValue(value)));
     }
 
     public void click(String fieldName){
-        Element element = getFieldValue(fieldName);
+        Element element = getFieldInstance(fieldName);
         clickAndConsume(element,null);
     }
 
@@ -140,33 +141,22 @@ public abstract class Page {
         return this.getClass().getDeclaredField(fieldName);
     }
 
-    private Boolean verifyElement(Field f,Function<Element,Boolean> function) {
+    private Boolean verifyElement(Element element,Function<Element,Boolean> function) {
         Boolean result = false;
-        try {
-            f.setAccessible(true);
-            Element element = (Element) f.get(this);
-            waitUntilVisible(element);
-            element.click();
-
-            if(function != null) {
-                result = function.apply(element);
-            }
-            f.setAccessible(false);
-            return result;
-        } catch (IllegalAccessException e) {
-            LOG.error("Error clicking and consuming the field " + f.getName(), e);
-            throw new NaturalAutomationException("Error clicking and consuming the field " + f.getName(), e);
-        }
+		element.click();
+		if(function != null) {
+			result = function.apply(element);
+		}
+		return result;
     }
-
 
     public boolean validateIsVisible(String fieldName) {
-        try {
-            Field field = getField(fieldName);
-            return verifyElement(field,element -> element.isDisplayed());
-        } catch (NoSuchFieldException e) {
-            LOG.error("Error retrieving the element " + fieldName, e);
-            return false;
-        }
+		Element element = getFieldInstance(fieldName);
+		return verifyElement(element, WebElement::isDisplayed);
     }
+
+	public boolean validateIfTableHasValue(String tableName, int row, String column, String value) {
+		TableElement tableElement = (TableElement) getFieldInstance(tableName);
+		return value.equals(tableElement.getValueByRowAndColumnName(row, column));
+	}
 }

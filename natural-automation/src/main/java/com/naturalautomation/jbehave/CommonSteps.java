@@ -2,6 +2,7 @@ package com.naturalautomation.jbehave;
 
 import java.util.Collection;
 
+import org.eclipse.jetty.util.annotation.Name;
 import org.hamcrest.Matchers;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
@@ -83,7 +84,7 @@ public class CommonSteps {
     @Given("I clicked table $table, on first row and column $column")
     public void givenIClickedOnTable(@Named("table") String table,
                                      @Named("column") String column) {
-        ((TableElement) ((Page) testScope.get(CURRENT_PAGE)).getFieldValue(table))
+        ((TableElement) ((Page) testScope.get(CURRENT_PAGE)).getFieldInstance(table))
                 .clickOnCellByRowAndColumnName(0, column);
     }
 
@@ -103,17 +104,25 @@ public class CommonSteps {
     @Then("there should be $collectionName")
     public void thenThereShouldBeResults(@Named("collectionName") String collectionName) {
         LOG.info("Then there should be {}.", collectionName);
-        Collection collection = (Collection) ((Page) testScope.get(CURRENT_PAGE)).getFieldValue(collectionName);
+        Collection collection = (Collection) ((Page) testScope.get(CURRENT_PAGE)).getFieldInstance(collectionName);
         Assert.assertThat(collection, Matchers.notNullValue());
         Assert.assertThat(collection.size(), Matchers.greaterThan(0));
     }
 
 
-    @Then("The element $element is visible")
+    @Then("the element $element is visible")
     public void isVisible(@Named("element") String element){
         LOG.info("Then the element {} is visible.", element);
         Page page = (Page) testScope.get(CURRENT_PAGE);
         assert(page.validateIsVisible(element));
+    }
+
+    @Then("the $table has value '$value' in first row and column $column")
+    public void tableHasValue(@Named("table") String table,
+                            @Name("value") String value,
+                            @Name("column") String column) {
+        Page page = (Page) testScope.get(CURRENT_PAGE);
+        assert(page.validateIfTableHasValue(table, 0, column, value));
     }
 
     @Then("just for show wait $seconds seconds")
