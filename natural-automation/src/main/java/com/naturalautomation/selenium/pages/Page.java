@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public abstract class Page {
@@ -42,7 +43,7 @@ public abstract class Page {
     public void fillDefaultData() {
         Stream.of(this.getClass().getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(InputData.class))
-                .forEach(f -> setFieldValue(f, EnhancedRandom.random(String.class)));
+                .forEach(f -> clickAndConsume(f, e -> e.inputValue(EnhancedRandom.random(String.class))));
     }
 
     public Object getFieldValue(String fieldName) {
@@ -107,20 +108,7 @@ public abstract class Page {
         headers.forEach(h -> rows.forEach(r -> setFieldValue(h, r.get(h))));
     }
 
-    public void clickOnElement(String fieldName) {
-        try {
-            Field field = this.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            new WebDriverWait(getDriver(), WAIT_TIMEOUT)
-                    .until(ExpectedConditions.visibilityOf((Element)field.get(this)));
-            Element element = (Element) field.get(this);
-            element.click();
-            field.setAccessible(false);
-        } catch (Exception e) {
-            LOG.error("Error when trying to set field value for field: " + fieldName + ".", e);
-            throw new NaturalAutomationException(e);
-        }
-    }
+
 
     public void waitUntilVisible(Element element) {
         new WebDriverWait(getDriver(), WAIT_TIMEOUT)
@@ -130,24 +118,36 @@ public abstract class Page {
     public void setFieldValue(String fieldName, CharSequence value)  {
         try {
             Field field = this.getClass().getDeclaredField(fieldName);
-            setFieldValue(field, value);
+            clickAndConsume(field,(f -> f.inputValue(value)));
         } catch (NoSuchFieldException e) {
             LOG.error("Error when trying to set field value for field: " + fieldName + ".", e);
             throw new NaturalAutomationException(e);
         }
     }
 
-    private void setFieldValue(Field f, CharSequence value) {
+    public void click(String fieldName){
+        try {
+            Field field = this.getClass().getDeclaredField(fieldName);
+            clickAndConsume(field,null);
+        } catch (NoSuchFieldException e) {
+            LOG.error("Error when trying click a field: " + fieldName + ".", e);
+            throw new NaturalAutomationException(e);
+        }
+    }
+
+    private void clickAndConsume(Field f,Consumer<Element> consumer) {
         try {
             f.setAccessible(true);
-            new WebDriverWait(webDriverWrapper.getWebDriver(),10000L).until(ExpectedConditions.visibilityOf((Element)f.get(this)));
+            new WebDriverWait(webDriverWrapper.getWebDriver(),WAIT_TIMEOUT).until(ExpectedConditions.visibilityOf((Element)f.get(this)));
             Element element = (Element) f.get(this);
             element.click();
-            element.inputValue(value);
+            if(consumer != null) {
+                consumer.accept(element);
+            }
             f.setAccessible(false);
         } catch (IllegalAccessException e) {
-            LOG.error("Error setting data to field " + f.getName(), e);
-            throw new NaturalAutomationException("Error setting data to field " + f.getName(), e);
+            LOG.error("Error clicking and consuming the field " + f.getName(), e);
+            throw new NaturalAutomationException("Error clicking and consuming the field " + f.getName(), e);
         }
     }
 

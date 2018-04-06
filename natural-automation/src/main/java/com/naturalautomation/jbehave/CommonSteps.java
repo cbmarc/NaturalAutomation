@@ -46,7 +46,7 @@ public class CommonSteps {
 
     @Given("I have clicked on $element")
     public void givenIHaveClickedOn(@Named("element") String element) {
-        ((Page) testScope.get(CURRENT_PAGE)).clickOnElement(element);
+        ((Page) testScope.get(CURRENT_PAGE)).click(element);
     }
 
     @Given("I have written '$text' in the $field field")
@@ -82,6 +82,13 @@ public class CommonSteps {
     public void whenIDoAnAction(@Named("action") String action) {
         LOG.info("When the user does a {}.", action);
         testScope.put(CURRENT_PAGE, runAction(action));
+    }
+
+    @When("I click on $element")
+    public void clickElement(String element){
+        LOG.info("When I click on {}",element);
+        Page page = (Page) testScope.get(CURRENT_PAGE);
+        page.click(element);
     }
 
     @Then("there should be $collectionName")
