@@ -1,9 +1,7 @@
 package com.naturalautomation.jbehave;
 
-import com.naturalautomation.annotations.Steps;
-import com.naturalautomation.selenium.TestScope;
-import com.naturalautomation.selenium.pages.Page;
-import com.naturalautomation.selenium.pages.PageFactory;
+import java.util.Collection;
+
 import org.hamcrest.Matchers;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
@@ -15,7 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collection;
+import com.naturalautomation.annotations.Steps;
+import com.naturalautomation.selenium.TestScope;
+import com.naturalautomation.selenium.element.ui.TableElement;
+import com.naturalautomation.selenium.pages.Page;
+import com.naturalautomation.selenium.pages.PageFactory;
 
 @Steps
 public class CommonSteps {
@@ -76,6 +78,13 @@ public class CommonSteps {
     @Given("I did a $action")
     public void givenIDidAction(@Named("action") String action) {
         testScope.put(CURRENT_PAGE, runAction(action));
+    }
+
+    @Given("I clicked table $table, on first row and column $column")
+    public void givenIClickedOnTable(@Named("table") String table,
+                                     @Named("column") String column) {
+        ((TableElement) ((Page) testScope.get(CURRENT_PAGE)).getFieldValue(table))
+                .clickOnCellByRowAndColumnName(0, column);
     }
 
     @When("I $action")

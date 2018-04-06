@@ -1,18 +1,5 @@
 package com.naturalautomation.selenium.pages;
 
-import com.naturalautomation.annotations.InputData;
-import com.naturalautomation.exceptions.NaturalAutomationException;
-import com.naturalautomation.exceptions.NotInPageException;
-import com.naturalautomation.jbehave.WebDriverWrapper;
-import com.naturalautomation.selenium.element.Element;
-import io.github.benas.randombeans.api.EnhancedRandom;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,6 +7,22 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.naturalautomation.annotations.InputData;
+import com.naturalautomation.exceptions.NaturalAutomationException;
+import com.naturalautomation.exceptions.NotInPageException;
+import com.naturalautomation.jbehave.WebDriverWrapper;
+import com.naturalautomation.selenium.element.Element;
+
+import io.github.benas.randombeans.api.EnhancedRandom;
 
 public abstract class Page {
 
@@ -45,15 +48,16 @@ public abstract class Page {
                 .forEach(f -> setFieldValue(f, EnhancedRandom.random(String.class)));
     }
 
-    public Object getFieldValue(String fieldName) {
+    public Element getFieldValue(String fieldName) {
         try {
             Field field = this.getClass().getDeclaredField(fieldName);
             boolean accesible = field.isAccessible();
             field.setAccessible(true);
-            Object obj = field.get(this);
+            Element element = (Element) field.get(this);
+            waitUntilVisible(element);
             // Restore previous state
             field.setAccessible(accesible);
-            return obj;
+            return element;
         } catch (NoSuchFieldException | IllegalAccessException e) {
             LOG.error("Error when trying to get field value for field: " + fieldName + ".", e);
             throw new NaturalAutomationException(e);
@@ -107,24 +111,23 @@ public abstract class Page {
         headers.forEach(h -> rows.forEach(r -> setFieldValue(h, r.get(h))));
     }
 
+    public void waitUntilVisible(WebElement element) {
+        new WebDriverWait(getDriver(), WAIT_TIMEOUT)
+                .until(ExpectedConditions.visibilityOf(element));
+    }
+
     public void clickOnElement(String fieldName) {
         try {
             Field field = this.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
-            new WebDriverWait(getDriver(), WAIT_TIMEOUT)
-                    .until(ExpectedConditions.visibilityOf((Element)field.get(this)));
             Element element = (Element) field.get(this);
+            waitUntilVisible(element);
             element.click();
             field.setAccessible(false);
         } catch (Exception e) {
             LOG.error("Error when trying to set field value for field: " + fieldName + ".", e);
             throw new NaturalAutomationException(e);
         }
-    }
-
-    public void waitUntilVisible(Element element) {
-        new WebDriverWait(getDriver(), WAIT_TIMEOUT)
-                .until(ExpectedConditions.visibilityOf(element));
     }
 
     public void setFieldValue(String fieldName, CharSequence value)  {
