@@ -1,5 +1,20 @@
 package com.naturalautomation.selenium.pages;
 
+import com.naturalautomation.annotations.InputData;
+import com.naturalautomation.exceptions.NaturalAutomationException;
+import com.naturalautomation.exceptions.NotInPageException;
+import com.naturalautomation.jbehave.WebDriverWrapper;
+import com.naturalautomation.selenium.element.Element;
+import com.naturalautomation.selenium.element.ui.TableElement;
+import io.github.benas.randombeans.api.EnhancedRandom;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,23 +24,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.naturalautomation.annotations.InputData;
-import com.naturalautomation.exceptions.NaturalAutomationException;
-import com.naturalautomation.exceptions.NotInPageException;
-import com.naturalautomation.jbehave.WebDriverWrapper;
-import com.naturalautomation.selenium.element.Element;
-import com.naturalautomation.selenium.element.ui.TableElement;
-
-import io.github.benas.randombeans.api.EnhancedRandom;
 
 public abstract class Page {
 
@@ -123,43 +121,45 @@ public abstract class Page {
                 .until(ExpectedConditions.visibilityOf(element));
     }
 
-    public void setFieldValue(String fieldName, CharSequence value)  {
+    public void setFieldValue(String fieldName, CharSequence value) {
         Element element = getFieldInstance(fieldName);
         clickAndConsume(element, (f -> f.inputValue(value)));
     }
 
-    public void click(String fieldName){
+    public void click(String fieldName) {
         Element element = getFieldInstance(fieldName);
-        clickAndConsume(element,null);
+        clickAndConsume(element, null);
     }
 
     private void clickAndConsume(Element element, Consumer<Element> consumer) {
-		element.click();
-		if (consumer != null) {
-			consumer.accept(element);
-		}
-	}
+        element.click();
+        if (consumer != null) {
+            consumer.accept(element);
+        }
+    }
 
     private Field getField(String fieldName) throws NoSuchFieldException {
         return this.getClass().getDeclaredField(fieldName);
     }
 
-    private Boolean verifyElement(Element element,Function<Element,Boolean> function) {
+    private Boolean verifyElement(Element element, Function<Element, Boolean> function) {
         Boolean result = false;
-		element.click();
-		if(function != null) {
-			result = function.apply(element);
-		}
-		return result;
+        element.click();
+        if (function != null) {
+            result = function.apply(element);
+        }
+        return result;
     }
 
     public boolean validateIsVisible(String fieldName) {
-		Element element = getFieldInstance(fieldName);
-		return verifyElement(element, WebElement::isDisplayed);
+        Element element = getFieldInstance(fieldName);
+        return verifyElement(element, WebElement::isDisplayed);
     }
 
-	public boolean validateIfTableHasValue(String tableName, int row, String column, String value) {
-		TableElement tableElement = (TableElement) getFieldInstance(tableName);
-		return value.equals(tableElement.getValueByRowAndColumnName(row, column));
-	}
+    public boolean validateIfTableHasValue(String tableName, int row, String column, String value) {
+        TableElement tableElement = (TableElement) getFieldInstance(tableName);
+        return value.equals(tableElement.getValueByRowAndColumnName(row, column));
+    }
+
+
 }

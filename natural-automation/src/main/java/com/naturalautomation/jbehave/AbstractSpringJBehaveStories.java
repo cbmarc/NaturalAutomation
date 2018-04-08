@@ -1,9 +1,11 @@
 package com.naturalautomation.jbehave;
 
+import com.naturalautomation.annotations.PageComponentScan;
 import com.naturalautomation.annotations.PageObject;
 import com.naturalautomation.annotations.UseWebDriver;
 import com.naturalautomation.exceptions.NaturalAutomationException;
-import com.naturalautomation.selenium.element.factory.ElementFactory;
+import com.naturalautomation.selenium.pages.Page;
+import com.naturalautomation.selenium.pages.PageFactory;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
 import org.jbehave.core.configuration.spring.SpringStoryControls;
@@ -23,8 +25,11 @@ import org.jbehave.core.steps.spring.SpringStepsFactory;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
@@ -51,6 +56,8 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
     @Autowired
     private WebDriverWrapper webDriverWrapper;
 
+    @Autowired
+    private PageFactory pageFactory;
 
     public AbstractSpringJBehaveStories() {
 
@@ -83,28 +90,40 @@ public class AbstractSpringJBehaveStories extends JUnitStories {
     public InjectableStepsFactory stepsFactory() {
         try {
             prepareWebDriver();
+            preparePages();
         } catch (IOException e) {
             throw new NaturalAutomationException("Error creating selenium driver",e);
         }
         return new SpringStepsFactory(configuration(), applicationContext);
     }
 
-    private void prepareWebDriver() throws IOException {
-        initiliazeDriver();
-        initializePageObjects();
-
-    }
-
-    private void initializePageObjects() {
-        for (String name : applicationContext.getBeanDefinitionNames()) {
-            Object bean = applicationContext.getBean(name);
-            if (bean.getClass().isAnnotationPresent(PageObject.class)) {
-                ElementFactory.initElements(webDriverWrapper.getWebDriver(), bean);
+    private void preparePages() {
+        if(!this.getClass().isAnnotationPresent(PageComponentScan.class)){
+            throw new NaturalAutomationException("There is not PageComponentScan annotation defined in the code. Please define this annotation.");
+        }
+        PageComponentScan pageComponentScan = this.getClass().getAnnotation(PageComponentScan.class);
+        ClassPathScanningCandidateComponentProvider scanner =
+                new ClassPathScanningCandidateComponentProvider(true);
+        scanner.addIncludeFilter(new AnnotationTypeFilter(PageObject.class));
+        for (BeanDefinition beanDefinition : scanner.findCandidateComponents(pageComponentScan.basePackage())) {
+            Class<?> clazz = null;
+            try {
+                clazz = Class.forName(beanDefinition.getBeanClassName());
+            } catch (ClassNotFoundException e) {
+                // if base package is too generic could lead to errors.
+            }
+            if(clazz.isAnnotationPresent(PageObject.class) && Page.class.isAssignableFrom(clazz)) {
+                System.out.println("Bean definition: " + beanDefinition.getBeanClassName());
+                PageObject pageObject = clazz.getAnnotation(PageObject.class);
+                if("".equals(pageObject.name())){
+                    throw new NaturalAutomationException(String.format("The class %s has a default name. Please set up a proper name for this page.",clazz.getSimpleName()));
+                }
+                pageFactory.register(pageObject.name(), (Class<? extends Page>) clazz);
             }
         }
     }
 
-    private void initiliazeDriver() throws IOException {
+    private void prepareWebDriver() throws IOException {
         if(this.getClass().isAnnotationPresent(UseWebDriver.class)) {
             Path basePath = Paths.get(DRIVERS_PATH).toAbsolutePath();
             Optional<Path> fileName = Files.list(basePath).filter(p -> p.getFileName().toString().startsWith(DRIVER_NAME)).findFirst();

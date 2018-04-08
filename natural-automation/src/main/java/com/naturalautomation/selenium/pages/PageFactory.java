@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import com.naturalautomation.jbehave.WebDriverWrapper;
+import com.naturalautomation.selenium.element.factory.ElementFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,8 @@ public class PageFactory {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private WebDriverWrapper webDriverWrapper;
 
 
     public void register(String name, Class<? extends Page> clazz){
@@ -31,7 +35,8 @@ public class PageFactory {
                     String.format("Page %s is not mapped. Check if a page extending the " +
                             "'Page' class and implementing the 'Named' interface exists.", name));
         }
-        return applicationContext.getBean(map.get(name));
+
+        return ElementFactory.initElements(webDriverWrapper.getWebDriver(), applicationContext.getBean(map.get(name)));
     }
 
 }

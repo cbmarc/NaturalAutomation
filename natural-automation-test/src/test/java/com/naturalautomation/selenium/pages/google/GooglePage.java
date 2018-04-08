@@ -3,13 +3,12 @@ package com.naturalautomation.selenium.pages.google;
 import com.naturalautomation.annotations.InputData;
 import com.naturalautomation.annotations.PageObject;
 import com.naturalautomation.selenium.element.Element;
-import com.naturalautomation.selenium.pages.Named;
 import com.naturalautomation.selenium.pages.Page;
 import org.openqa.selenium.support.FindBy;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@PageObject
-public class GooglePage extends Page implements Named {
+@PageObject(name = "Google")
+public class GooglePage extends Page {
 
     private static final String PAGE_NAME = "Google";
     private static final String PAGE_URL = "http://www.google.es";
@@ -28,14 +27,9 @@ public class GooglePage extends Page implements Named {
         this.googleResultsPage = googleResultsPage;
     }
 
-    @Override
-    public String getName() {
-        return PAGE_NAME;
-    }
-
     public ResultsPage search() {
         searchBox.pressEnter();
-        return googleResultsPage;
+        return (ResultsPage) pageFactory.getPage("Google results");
     }
 
     public ResultsPage search(String text) {

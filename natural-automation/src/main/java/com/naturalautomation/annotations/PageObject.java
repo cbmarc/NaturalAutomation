@@ -13,4 +13,6 @@ import org.springframework.stereotype.Component;
 @Retention(RUNTIME)
 @Component
 @Scope("prototype")
-public @interface PageObject {}
+public @interface PageObject {
+    String name() default "";
+}
